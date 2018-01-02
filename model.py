@@ -31,14 +31,15 @@ def weights_init(m):
 class ActorCritic(torch.nn.Module):
     def __init__(self, num_inputs, action_space):
         super(ActorCritic, self).__init__()
-        self.conv1 = nn.Conv2d(num_inputs, 32, 3, stride=2, padding=1)
-        self.conv2 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
-        self.conv3 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
-        self.conv4 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
+        self.conv1 = nn.Conv2d(num_inputs, 32, 3, stride=2, padding=1).double()
+        self.conv2 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
+        self.conv3 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
+        self.conv4 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
 
-        self.lstm = nn.LSTMCell(32 * 3 * 3, 256)
+        self.lstm = nn.LSTMCell(224, 256)
 
-        num_outputs = action_space.n
+        #num_outputs = action_space.n
+        num_outputs = action_space
         self.critic_linear = nn.Linear(256, 1)
         self.actor_linear = nn.Linear(256, num_outputs)
 
@@ -62,7 +63,7 @@ class ActorCritic(torch.nn.Module):
         x = F.elu(self.conv3(x))
         x = F.elu(self.conv4(x))
 
-        x = x.view(-1, 32 * 3 * 3)
+        x = x.view(-1, 224).float()
         hx, cx = self.lstm(x, (hx, cx))
         x = hx
 

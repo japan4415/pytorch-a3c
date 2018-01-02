@@ -12,6 +12,8 @@ from model import ActorCritic
 from test import test
 from train import train
 
+import envTest
+
 # Based on
 # https://github.com/pytorch/examples/tree/master/mnist_hogwild
 # Training settings
@@ -40,6 +42,8 @@ parser.add_argument('--env-name', default='PongDeterministic-v4',
                     help='environment to train on (default: PongDeterministic-v4)')
 parser.add_argument('--no-shared', default=False,
                     help='use an optimizer without shared momentum.')
+parser.add_argument('--agent-number', default=1, 
+                    help='agent number')
 
 
 if __name__ == '__main__':
@@ -49,29 +53,41 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)
-    env = create_atari_env(args.env_name)
-    shared_model = ActorCritic(
-        env.observation_space.shape[0], env.action_space)
-    shared_model.share_memory()
 
-    if args.no_shared:
-        optimizer = None
-    else:
-        optimizer = my_optim.SharedAdam(shared_model.parameters(), lr=args.lr)
-        optimizer.share_memory()
+    # 環境を宣言
+    env = envTest.create_divehole(2)
 
+    # shared_modelをagent数分用意
+    shared_model_ary = []
+    for i in range(env.agentN):
+        shared_model_ary.append(ActorCritic(env.field.shape[0], env.action_space))
+    for i in range(len(shared_model_ary)):
+        shared_model_ary[i].share_memory()
+
+    # optimizerもagent数分用意
+    optimizer_ary = []
+    for i in range(len(shared_model_ary)):
+        if args.no_shared:
+            optimizer_ary.append(None)
+        else:
+            optimizer_ary.append(my_optim.SharedAdam(shared_model_ary[i].parameters(), lr=args.lr))
+            optimizer_ary[i].share_memory()
+
+    # マルチプロセスの準備
     processes = []
 
     counter = mp.Value('i', 0)
     lock = mp.Lock()
 
-    p = mp.Process(target=test, args=(args.num_processes, args, shared_model, counter))
+    # プロセスを宣言
+    p = mp.Process(target=test, args=(args.num_processes, args, shared_model_ary, counter))
     p.start()
     processes.append(p)
 
     for rank in range(0, args.num_processes):
-        p = mp.Process(target=train, args=(rank, args, shared_model, counter, lock, optimizer))
+        p = mp.Process(target=train, args=(rank, args, shared_model_ary, counter, lock, optimizer_ary[i]))
         p.start()
         processes.append(p)
+
     for p in processes:
         p.join()

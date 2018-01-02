@@ -6,6 +6,8 @@ from torch.autograd import Variable
 from envs import create_atari_env
 from model import ActorCritic
 
+import envTest
+
 
 def ensure_shared_grads(model, shared_model):
     for param, shared_param in zip(model.parameters(),
@@ -15,18 +17,30 @@ def ensure_shared_grads(model, shared_model):
         shared_param._grad = param.grad
 
 
-def train(rank, args, shared_model, counter, lock, optimizer=None):
+def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
+    # torchのseedを定める
     torch.manual_seed(args.seed + rank)
 
-    env = create_atari_env(args.env_name)
-    env.seed(args.seed + rank)
+    # 環境を宣言
+    #env = create_atari_env(args.env_name)
+    env = envTest.create_divehole(2)
+    #env.seed(args.seed + rank)
 
-    model = ActorCritic(env.observation_space.shape[0], env.action_space)
+    # モデルの宣言
+    model_ary = []
+    for i in range(len(shared_model_ary)):
+        #model_ary.append(ActorCritic(env.observation_space.shape[0], env.action_space))
+        model_ary.append(ActorCritic(env.field.shape[0], env.action_space))
 
-    if optimizer is None:
-        optimizer = optim.Adam(shared_model.parameters(), lr=args.lr)
+    # オプティマイザーの宣言
+    optimizer_ary = [None] * len(shared_model_ary)
+    for i in range(len(shared_model_ary)):
+        if optimizer_ary[i] is None:
+            optimizer_ary[i] = optim.Adam(shared_model_ary[i].parameters(), lr=args.lr)
 
-    model.train()
+    # ???
+    for i in range(len(shared_model_ary)):
+        model_ary[i].train()
 
     state = env.reset()
     state = torch.from_numpy(state)
@@ -35,34 +49,59 @@ def train(rank, args, shared_model, counter, lock, optimizer=None):
     episode_length = 0
     while True:
         # Sync with the shared model
-        model.load_state_dict(shared_model.state_dict())
+        # shared_modelのロード
+        for i in range(len(shared_model_ary)):
+            model_ary[i].load_state_dict(shared_model_ary[i].state_dict())
         if done:
-            cx = Variable(torch.zeros(1, 256))
-            hx = Variable(torch.zeros(1, 256))
+            cx_ary = []
+            hx_ary = []
+            for i in range(len(shared_model_ary)):
+                cx_ary.append(Variable(torch.zeros(1, 256)))
+                hx_ary.append(Variable(torch.zeros(1, 256)))
         else:
-            cx = Variable(cx.data)
-            hx = Variable(hx.data)
+            for i in range(len(shared_model_ary)):
+                cx_ary[i] = Variable(cx.data)
+                hx_ary[i] = Variable(hx.data)
 
-        values = []
-        log_probs = []
-        rewards = []
-        entropies = []
+        # 格納場所の宣言
+        values_ary = []
+        log_probs_ary = []
+        rewards_ary = []
+        entropies_ary = []
+        for i in range(len(shared_model_ary)):
+            values_ary.append([])
+            log_probs_ary.append([])
+            rewards_ary.append([])
+            entropies_ary.append([])
 
+        # 経験蓄積開始
         for step in range(args.num_steps):
             episode_length += 1
-            value, logit, (hx, cx) = model((Variable(state.unsqueeze(0)),
-                                            (hx, cx)))
-            prob = F.softmax(logit)
-            log_prob = F.log_softmax(logit)
-            entropy = -(log_prob * prob).sum(1, keepdim=True)
-            entropies.append(entropy)
 
-            action = prob.multinomial().data
-            log_prob = log_prob.gather(1, Variable(action))
+            # 行動を計算？
+            action_ary = []
+            value_ary = []
+            log_prob_ary = []
+            for i in range(len(shared_model_ary)):
+                value, logit, (hx, cx) = model_ary[i]((Variable(state.unsqueeze(0)),(hx_ary[i], cx_ary[i])))
+                prob = F.softmax(logit)
+                log_prob = F.log_softmax(logit)
+                entropy = -(log_prob * prob).sum(1, keepdim=True)
+                entropies_ary[i].append(entropy)
 
-            state, reward, done, _ = env.step(action.numpy())
+                action_ary.append(prob.multinomial().data)
+                log_prob_ary.append(log_prob.gather(1, Variable(action_ary[i])))
+
+            # 実行してs,r,dを受け取る
+            state, reward_ary, done = env.step(action_ary)
             done = done or episode_length >= args.max_episode_length
-            reward = max(min(reward, 1), -1)
+
+
+            #print(reward_ary)
+            for i in range(len(shared_model_ary)):
+                reward_ary[i] = max(min(reward_ary[i], 1), -1)
+
+            # ここまでで問題発生
 
             with lock:
                 counter.value += 1
@@ -72,40 +111,44 @@ def train(rank, args, shared_model, counter, lock, optimizer=None):
                 state = env.reset()
 
             state = torch.from_numpy(state)
-            values.append(value)
-            log_probs.append(log_prob)
-            rewards.append(reward)
+            for i in range(len(shared_model_ary)):
+                values_ary[i].append(value)
+                log_probs_ary[i].append(log_prob_ary[i])
+                rewards_ary[i].append(reward_ary[i])
 
             if done:
                 break
 
-        R = torch.zeros(1, 1)
-        if not done:
-            value, _, _ = model((Variable(state.unsqueeze(0)), (hx, cx)))
-            R = value.data
+        R_ary = [torch.zeros(1, 1)] * len(shared_model_ary)
+        for i in range(len(shared_model_ary)):
+            if not done:
+                value, _, _ = model_ary[i]((Variable(state.unsqueeze(0)), (hx_ary[i], cx_ary[i])))
+                R_ary = value.data
 
-        values.append(Variable(R))
-        policy_loss = 0
-        value_loss = 0
-        R = Variable(R)
-        gae = torch.zeros(1, 1)
-        for i in reversed(range(len(rewards))):
-            R = args.gamma * R + rewards[i]
-            advantage = R - values[i]
-            value_loss = value_loss + 0.5 * advantage.pow(2)
+            values_ary[i].append(Variable(R_ary[i]))
 
-            # Generalized Advantage Estimataion
-            delta_t = rewards[i] + args.gamma * \
-                values[i + 1].data - values[i].data
-            gae = gae * args.gamma * args.tau + delta_t
+        policy_loss_ary = [0] * len(shared_model_ary)
+        value_loss_ary = [0] * len(shared_model_ary)
+        for i in range(len(shared_model_ary)):
+            R_ary[i] = Variable(R_ary[i])
 
-            policy_loss = policy_loss - \
-                log_probs[i] * Variable(gae) - args.entropy_coef * entropies[i]
+        gae_ary = [torch.zeros(1, 1)] * len(shared_model_ary)
+        for j in range(len(shared_model_ary)):
+            for i in reversed(range(len(rewards_ary[j]))):
+                R_ary[j] = args.gamma * R_ary[j] + rewards_ary[j][i]
+                advantage = R_ary[j] - values_ary[j][i]
+                value_loss_ary[j] = value_loss_ary[j] + 0.5 * advantage.pow(2)
 
-        optimizer.zero_grad()
+                # Generalized Advantage Estimataion
+                delta_t = rewards_ary[j][i] + args.gamma * values_ary[j][i + 1].data - values_ary[j][i].data
+                gae_ary[j] = gae_ary[j] * args.gamma * args.tau + delta_t
 
-        (policy_loss + args.value_loss_coef * value_loss).backward()
-        torch.nn.utils.clip_grad_norm(model.parameters(), args.max_grad_norm)
+                policy_loss_ary[j] = policy_loss_ary[j] - log_probs_ary[j][i] * Variable(gae_ary[j]) - args.entropy_coef * entropies_ary[j][i]
 
-        ensure_shared_grads(model, shared_model)
-        optimizer.step()
+            optimizer_ary[j].zero_grad()
+
+            (policy_loss_ary[j] + args.value_loss_coef * value_loss_ary[j]).backward()
+            torch.nn.utils.clip_grad_norm(model_ary[j].parameters(), args.max_grad_norm)
+
+            ensure_shared_grads(model_ary[j], shared_model_ary[j])
+            optimizer_ary[j].step()
