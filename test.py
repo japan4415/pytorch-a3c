@@ -12,13 +12,16 @@ from model import ActorCritic
 import envTest
 
 
+
+
 def test(rank, args, shared_model_ary, counter):
+    print('lets start!!!')
     torch.manual_seed(args.seed + rank)
 
     #env = create_atari_env(args.env_name)
     #env.seed(args.seed + rank)
 
-    env = envTest.create_divehole(2)
+    env = envTest.create_divehole(args.agent_number)
 
     model_ary = []
     for i in range(len(shared_model_ary)):
@@ -28,14 +31,19 @@ def test(rank, args, shared_model_ary, counter):
 
     state = env.reset()
     state = torch.from_numpy(state)
-    reward_sum_ary = [0] * len(shared_model_ary)
     done = True
 
     start_time = time.time()
 
     # a quick hack to prevent the agent from stucking
-    actions = deque(maxlen=100)
+    actions = [deque(maxlen=100)] * len(shared_model_ary)
     episode_length = 0
+
+    kai = 0
+
+    # reward合計
+    total_reward = 0
+
     while True:
         episode_length += 1
         # Sync with the shared model
@@ -60,31 +68,41 @@ def test(rank, args, shared_model_ary, counter):
             action_ary.append(prob.max(1, keepdim=True)[1].data)
 
         state, reward_ary, done= env.step(action_ary)
-        env.rrender(state,counter.value,episode_length,0)
-        try:
-            reward_ary[0]
-        except:
-            reward_ary = [reward_ary]
-        done = done or episode_length >= args.max_episode_length
-        for i in range(len(shared_model_ary)):
-            reward_sum_ary[i] += reward_ary[i]
+    
+
+        # try:
+        #     reward_ary[0]
+        # except:
+        #     reward_ary = [reward_ary]
+
+        done = done or episode_length >= env.turnMaxx
 
         # a quick hack to prevent the agent from stucking
-        actions.append(action_ary)
-        if actions.count(actions[0]) == actions.maxlen:
-            done = True
+        for i in range(len(shared_model_ary)):
+            actions[i].append(action_ary[i].numpy())
+            if actions[i].count(actions[i][0]) == actions[i].maxlen:
+                done = True
+                print('repeat max')
+        if kai%10==0:
+            env.rrender(state,kai,episode_length,0)
 
         if done:
-            for i in range(len(shared_model_ary)):
-                print("Time {}, num steps {}, FPS {:.0f}, episode reward {}, episode length {}".format(
-                    time.strftime("%Hh %Mm %Ss",
-                                time.gmtime(time.time() - start_time)),
-                    counter.value, counter.value / (time.time() - start_time),
-                    reward_sum_ary[i], episode_length))
-            reward_sum_ary = [0] * len(shared_model_ary)
+            total_reward += reward_ary[0]
+            if episode_length != env.turnMaxx:
+                print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
+            if kai%10 == 0:
+                print("Time {}, num steps {}, FPS {:.0f}, reward/10 {}, episode length {}".format(
+                    time.strftime("%Hh %Mm %Ss",time.gmtime(time.time() - start_time)),
+                    counter.value, 
+                    counter.value / (time.time() - start_time),
+                    total_reward / 10, 
+                    episode_length))
+                total_reward = 0
             episode_length = 0
-            actions.clear()
+            for i in range(len(shared_model_ary)):
+                actions[i].clear()
             state = env.reset()
-            time.sleep(60)
+            time.sleep(1)
+            kai += 1
 
         state = torch.from_numpy(state)

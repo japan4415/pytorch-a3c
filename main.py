@@ -14,6 +14,8 @@ from train import train
 
 import envTest
 
+import shutil
+
 # Based on
 # https://github.com/pytorch/examples/tree/master/mnist_hogwild
 # Training settings
@@ -36,26 +38,31 @@ parser.add_argument('--num-processes', type=int, default=4,
                     help='how many training processes to use (default: 4)')
 parser.add_argument('--num-steps', type=int, default=20,
                     help='number of forward steps in A3C (default: 20)')
-parser.add_argument('--max-episode-length', type=int, default=1000000,
+parser.add_argument('--max-episode-length', type=int, default=10000,
                     help='maximum length of an episode (default: 1000000)')
 parser.add_argument('--env-name', default='PongDeterministic-v4',
                     help='environment to train on (default: PongDeterministic-v4)')
 parser.add_argument('--no-shared', default=False,
                     help='use an optimizer without shared momentum.')
-parser.add_argument('--agent-number', default=1, 
+parser.add_argument('--agent-number', type=int, default=2, 
                     help='agent number')
 
 
 if __name__ == '__main__':
-    os.environ['OMP_NUM_THREADS'] = '1'
+    #os.environ['OMP_NUM_THREADS'] = '1'
     os.environ['CUDA_VISIBLE_DEVICES'] = ""
+
+
+    # logの削除
+    shutil.rmtree("./log")
+    os.makedirs('log')
 
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)
 
     # 環境を宣言
-    env = envTest.create_divehole(2)
+    env = envTest.create_divehole(int(args.agent_number))
 
     # shared_modelをagent数分用意
     shared_model_ary = []

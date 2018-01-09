@@ -1,0 +1,1 @@
+ffmpeg -r 10 -i ../log/no520/%d.png -vcodec libx264 -pix_fmt yuv420p -r 60 out.mp4

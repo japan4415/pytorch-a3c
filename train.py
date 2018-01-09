@@ -23,7 +23,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
     # 環境を宣言
     #env = create_atari_env(args.env_name)
-    env = envTest.create_divehole(2)
+    env = envTest.create_divehole(args.agent_number)
     #env.seed(args.seed + rank)
 
     # モデルの宣言
@@ -94,6 +94,8 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
             # 実行してs,r,dを受け取る
             state, reward_ary, done = env.step(action_ary)
+            # if reward_ary[0] > 0:
+            #     print(reward_ary)
             done = done or episode_length >= args.max_episode_length
 
 
@@ -123,7 +125,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
         for i in range(len(shared_model_ary)):
             if not done:
                 value, _, _ = model_ary[i]((Variable(state.unsqueeze(0)), (hx_ary[i], cx_ary[i])))
-                R_ary = value.data
+                R_ary[i] = value.data
 
             values_ary[i].append(Variable(R_ary[i]))
 
@@ -147,7 +149,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
             optimizer_ary[j].zero_grad()
 
-            (policy_loss_ary[j] + args.value_loss_coef * value_loss_ary[j]).backward()
+            (policy_loss_ary[j] + args.value_loss_coef * value_loss_ary[j]).backward(retain_graph=True)
             torch.nn.utils.clip_grad_norm(model_ary[j].parameters(), args.max_grad_norm)
 
             ensure_shared_grads(model_ary[j], shared_model_ary[j])

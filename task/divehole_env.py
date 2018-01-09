@@ -21,82 +21,92 @@ class DiveholeEnv(gym.Env):
         self.colorAA = []
         for i in range(self.agentN):
             self.colorAA.append([[255-i,255-i,0],[0,0,255-i],[255-i,0,0],[0,255-i,0]])
-        self.turnMax = 500
+        self.turnMax = 10000
+        self.turnMaxx = 10000
         self._reset()
     
     def _step(self,AA):
         for i,A in enumerate(AA):
-            # Aをnumpy形式に変換
-            A = A.numpy()
-            # 計算ようにstatusをバックアップ
-            statusBA = self.statusA.copy()
-            # 動きの種類を計算
-            color = A // 5
-            move = A % 5
-            # 移動をstatusAに反映
-            if move == 0:
-                pass
-            elif move == 1:
-                self.statusA[i][0] += 1
-            elif move == 2:
-                self.statusA[i][1] += 1
-            elif move == 3:
-                self.statusA[i][0] -= 1
-            elif move == 4:
-                self.statusA[i][1] -= 1
-            # 位置を正しく
-            if self.statusA[i][0] == -1:
-                self.statusA[i][0] = 99
-            elif self.statusA[i][0] == 100:
-                self.statusA[i][0] = 0
-            if self.statusA[i][1] == -1:
-                self.statusA[i][1] = 99
-            elif self.statusA[i][1] == 100:
-                self.statusA[i][1] = 0
-            # 色をstatusAに反映
             if self.statusA[i][0] != 102:
-                # print(i)
-                # print("color")
-                # print(color)
-                # print(self.colorAA[i][color[0][0]])
-                self.statusA[i][2:5] = self.colorAA[i][color[0][0]]
+                # Aをnumpy形式に変換
+                A = A.numpy()
+                # 計算ようにstatusをバックアップ
+                statusBA = self.statusA.copy()
+                # 動きの種類を計算
+                color = A // 5
+                move = A % 5
+                # 移動をstatusAに反映
+                if move == 0:
+                    pass
+                elif move == 1:
+                    self.statusA[i][0] += 1
+                elif move == 2:
+                    self.statusA[i][1] += 1
+                elif move == 3:
+                    self.statusA[i][0] -= 1
+                elif move == 4:
+                    self.statusA[i][1] -= 1
+                # 位置を正しく
+                if self.statusA[i][0] == -1:
+                    self.statusA[i][0] = 29
+                elif self.statusA[i][0] == 30:
+                    self.statusA[i][0] = 0
+                if self.statusA[i][1] == -1:
+                    self.statusA[i][1] = 29
+                elif self.statusA[i][1] == 30:
+                    self.statusA[i][1] = 0
+                # 色をstatusAに反映
+                if self.statusA[i][0] != 102:
+                    # print(i)
+                    # print("color")
+                    # print(color)
+                    # print(self.colorAA[i][color[0][0]])
+                    self.statusA[i][2:5] = self.colorAA[i][color[0][0]]
         
         # Fの判定
-        f = 0
+        fA = [0] * self.agentN
         for i in range(self.agentN):
             for i2 in range(self.agentN):
                 #print(i+self.agentN+i2)
-                if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
-                    self.F[i] = 1
-                    self.statusA[i][0] = 102
-                    self.statusA[i][1] = 102
-                    self.statusA[i+self.agentN+i2][0] = 102
-                    self.statusA[i+self.agentN+i2][1] = 102
-
+                if self.statusA[self.agentN+i2][0] == 102:
+                    fA[i2] = 1
+                else:
+                    if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
+                        fA[i2] = 1
+                        self.statusA[self.agentN+i2][0] = 102
+                        self.statusA[self.agentN+i2][1] = 102
+        if sum(fA) == self.agentN:
+            self.F = True
+        else:
+            self.F = False
 
         # R計算
         if self.turn <= self.turnMax:
-            if sum(self.F) == self.agentN:
-                R = [self.turnMax - self.turn,self.turnMax - self.turn]
+            if self.F:
+                R = [(self.turnMax - self.turn) / self.turnMax,(self.turnMax - self.turn) / self.turnMax]
+                print("yay: "+str(R[0]))
             else:
                 R = [0,0]
         else:
             R = [0,0]
+            self.F = False
 
         # 再レンダリング
-        self.field = np.zeros(((100,100,3)))
+        self.field = np.zeros(((30,30,3)))
         for status in self.statusA:
             if status[0] != 102:
                 self.field[status[0]][status[1]] = status[2:5]
+
+        self.turn += 1
 
         return self.field,R,self.F
 
 
     def _reset(self):
-        self.turn = 0
+        self.turn = 1
         self.F = [0] * self.agentN
         self.statusA = np.zeros((self.agentN*2,2),dtype="int32")
-        positionXYA = [random.choice(range(100),self.agentN*2,replace=False),random.choice(range(100),self.agentN*2,replace=False)]
+        positionXYA = [random.choice(range(30),self.agentN*2,replace=False),random.choice(range(30),self.agentN*2,replace=False)]
         colorA = random.choice(range(4),self.agentN,replace=False)
         for i in range(self.agentN*2):
             self.statusA[i,0] = positionXYA[0][i]
@@ -112,7 +122,7 @@ class DiveholeEnv(gym.Env):
         # print(colorAG)
         self.statusA = np.c_[self.statusA,colorAG]
         # print(self.statusA)
-        self.field = np.zeros(((100,100,3)))
+        self.field = np.zeros(((30,30,3)))
         # print(self.field)
         for status in self.statusA:
             if status[0] != 102:
@@ -123,7 +133,7 @@ class DiveholeEnv(gym.Env):
 
 
     def rrender(self, state,name,stepN,mode):
-        if not os.path.isfile('log/no' + str(name)):
+        if not os.path.isdir('log/no' + str(name)):
             os.makedirs('log/no' + str(name))
         if mode == 0:
             img = Image.fromarray(np.uint8(state))
