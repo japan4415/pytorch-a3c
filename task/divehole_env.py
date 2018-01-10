@@ -37,6 +37,7 @@ class DiveholeEnv(gym.Env):
                 # 動きの種類を計算
                 color = A // 5
                 move = A % 5
+                print(move)
                 # 移動をstatusAに反映
                 if move == 0:
                     pass
