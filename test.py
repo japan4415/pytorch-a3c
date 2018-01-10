@@ -106,7 +106,7 @@ def test(rank, args, shared_model_ary, counter):
             total_reward += reward_ary[0]
             # graph出力
             x.append(counter.value)
-            xt.append(time.strftime("%Hh %Mm %Ss",time.gmtime(time.time() - start_time)))
+            xt.append(time.time() - start_time)
             y.append(reward_ary[0])
             plt.clf()
             plt.plot(x,y,marker=".")
