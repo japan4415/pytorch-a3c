@@ -18,9 +18,6 @@ import matplotlib.pyplot as plt
 from progressbar import ProgressBar
 
 
-
-
-
 def test(rank, args, shared_model_ary, counter):
     print('lets start!!!')
     torch.manual_seed(args.seed + rank)
@@ -46,7 +43,7 @@ def test(rank, args, shared_model_ary, counter):
     actions = [deque(maxlen=100)] * len(shared_model_ary)
     episode_length = 0
 
-    kai = 0
+    kai = 1
 
     # reward合計
     total_reward = 0
@@ -128,7 +125,7 @@ def test(rank, args, shared_model_ary, counter):
                     total_reward / 10, 
                     episode_length))
                 total_reward = 0
-                p = ProgressBar(kai, kai+9)
+                p = ProgressBar(kai+1, kai+10)
             episode_length = 0
             for i in range(len(shared_model_ary)):
                 actions[i].clear()
