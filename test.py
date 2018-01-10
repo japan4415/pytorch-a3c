@@ -25,7 +25,7 @@ def test(rank, args, shared_model_ary, counter):
     #env = create_atari_env(args.env_name)
     #env.seed(args.seed + rank)
 
-    env = envTest.create_divehole(args.agent_number,args.field_size,args.num_episode_length)
+    env = envTest.create_divehole(args.agent_number,args.field_size,args.max_episode_length)
 
     model_ary = []
     for i in range(len(shared_model_ary)):
