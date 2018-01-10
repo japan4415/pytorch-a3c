@@ -54,6 +54,7 @@ def test(rank, args, shared_model_ary, counter):
     y = []
 
     while True:
+        print("Test Start")
         episode_length += 1
         # Sync with the shared model
         if done:
