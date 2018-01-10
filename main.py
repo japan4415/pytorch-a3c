@@ -46,11 +46,15 @@ parser.add_argument('--no-shared', default=False,
                     help='use an optimizer without shared momentum.')
 parser.add_argument('--agent-number', type=int, default=2, 
                     help='agent number')
+parser.add_argument('--field-size', type=int, default=30, help='field size')
 
 
 if __name__ == '__main__':
+    print("start program")
     #os.environ['OMP_NUM_THREADS'] = '1'
     os.environ['CUDA_VISIBLE_DEVICES'] = ""
+
+    mp.set_start_method("spawn")
 
 
     # logの削除
@@ -62,12 +66,12 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
 
     # 環境を宣言
-    env = envTest.create_divehole(int(args.agent_number))
+    env = envTest.create_divehole(args.agent_number,args.field_size)
 
     # shared_modelをagent数分用意
     shared_model_ary = []
-    for i in range(env.agentN):
-        shared_model_ary.append(ActorCritic(env.field.shape[0], env.action_space))
+    for i in range(args.agent_number):
+        shared_model_ary.append(ActorCritic(args.field_size, env.action_space))
     for i in range(len(shared_model_ary)):
         shared_model_ary[i].share_memory()
 
@@ -80,7 +84,7 @@ if __name__ == '__main__':
             optimizer_ary.append(my_optim.SharedAdam(shared_model_ary[i].parameters(), lr=args.lr))
             optimizer_ary[i].share_memory()
 
-    # マルチプロセスの準備
+    # # マルチプロセスの準備
     processes = []
 
     counter = mp.Value('i', 0)
@@ -98,3 +102,9 @@ if __name__ == '__main__':
 
     for p in processes:
         p.join()
+
+
+    # testt = 0
+    # counterr = 0
+    # lockk = 0
+    # train(testt,args,shared_model_ary,counterr,lockk,optimizer_ary[i])

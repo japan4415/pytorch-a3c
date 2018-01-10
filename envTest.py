@@ -7,6 +7,6 @@ if __name__ == "__main__":
     env._step([1,2])
     print(env.statusA)
 
-def create_divehole(agentN):
-    env = divehole_env.DiveholeEnv(agentN)
+def create_divehole(agentN,fieldSize):
+    env = divehole_env.DiveholeEnv(agentN,fieldSize)
     return env

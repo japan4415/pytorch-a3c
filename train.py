@@ -23,7 +23,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
     # 環境を宣言
     #env = create_atari_env(args.env_name)
-    env = envTest.create_divehole(args.agent_number)
+    env = envTest.create_divehole(args.agent_number,args.field_size)
     #env.seed(args.seed + rank)
 
     # モデルの宣言
@@ -84,8 +84,8 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
             log_prob_ary = []
             for i in range(len(shared_model_ary)):
                 value, logit, (hx, cx) = model_ary[i]((Variable(state.unsqueeze(0)),(hx_ary[i], cx_ary[i])))
-                prob = F.softmax(logit)
-                log_prob = F.log_softmax(logit)
+                prob = F.softmax(logit,dim=1)
+                log_prob = F.log_softmax(logit,dim=1)
                 entropy = -(log_prob * prob).sum(1, keepdim=True)
                 entropies_ary[i].append(entropy)
 
@@ -104,7 +104,6 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
                 reward_ary[i] = max(min(reward_ary[i], 1), -1)
 
             # ここまでで問題発生
-
             with lock:
                 counter.value += 1
 

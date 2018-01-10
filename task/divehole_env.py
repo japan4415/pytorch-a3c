@@ -13,10 +13,12 @@ import os.path
 class DiveholeEnv(gym.Env):
     metadata = {'render.model':['normal']}
 
-    def __init__(self,agentN):
+    def __init__(self,agentN,fieldSize):
+        print("env inited")
         self.availableA = range(20)
         self.action_space = 20
         self.agentN = agentN
+        self.fieldSize = fieldSize
         # 色の宣言 黄色 青 赤 黄緑
         self.colorAA = []
         for i in range(self.agentN):
@@ -48,12 +50,12 @@ class DiveholeEnv(gym.Env):
                     self.statusA[i][1] -= 1
                 # 位置を正しく
                 if self.statusA[i][0] == -1:
-                    self.statusA[i][0] = 29
-                elif self.statusA[i][0] == 30:
+                    self.statusA[i][0] = self.fieldSize-1
+                elif self.statusA[i][0] == self.fieldSize:
                     self.statusA[i][0] = 0
                 if self.statusA[i][1] == -1:
-                    self.statusA[i][1] = 29
-                elif self.statusA[i][1] == 30:
+                    self.statusA[i][1] = self.fieldSize-1
+                elif self.statusA[i][1] == self.fieldSize:
                     self.statusA[i][1] = 0
                 # 色をstatusAに反映
                 if self.statusA[i][0] != 102:
@@ -84,7 +86,7 @@ class DiveholeEnv(gym.Env):
         if self.turn <= self.turnMax:
             if self.F:
                 R = [(self.turnMax - self.turn) / self.turnMax,(self.turnMax - self.turn) / self.turnMax]
-                print("yay: "+str(R[0]))
+                # print("yay: "+str(R[0]))
             else:
                 R = [0,0]
         else:
@@ -92,7 +94,7 @@ class DiveholeEnv(gym.Env):
             self.F = False
 
         # 再レンダリング
-        self.field = np.zeros(((30,30,3)))
+        self.field = np.zeros(((self.fieldSize,self.fieldSize,3)))
         for status in self.statusA:
             if status[0] != 102:
                 self.field[status[0]][status[1]] = status[2:5]
@@ -106,7 +108,7 @@ class DiveholeEnv(gym.Env):
         self.turn = 1
         self.F = [0] * self.agentN
         self.statusA = np.zeros((self.agentN*2,2),dtype="int32")
-        positionXYA = [random.choice(range(30),self.agentN*2,replace=False),random.choice(range(30),self.agentN*2,replace=False)]
+        positionXYA = [random.choice(range(self.fieldSize),self.agentN*2,replace=False),random.choice(range(self.fieldSize),self.agentN*2,replace=False)]
         colorA = random.choice(range(4),self.agentN,replace=False)
         for i in range(self.agentN*2):
             self.statusA[i,0] = positionXYA[0][i]
@@ -122,7 +124,7 @@ class DiveholeEnv(gym.Env):
         # print(colorAG)
         self.statusA = np.c_[self.statusA,colorAG]
         # print(self.statusA)
-        self.field = np.zeros(((30,30,3)))
+        self.field = np.zeros(((self.fieldSize,self.fieldSize,3)))
         # print(self.field)
         for status in self.statusA:
             if status[0] != 102:
