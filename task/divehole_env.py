@@ -13,7 +13,7 @@ import os.path
 class DiveholeEnv(gym.Env):
     metadata = {'render.model':['normal']}
 
-    def __init__(self,agentN,fieldSize):
+    def __init__(self,agentN,fieldSize,turnMax):
         print("env inited")
         self.availableA = range(20)
         self.action_space = 20
@@ -23,8 +23,8 @@ class DiveholeEnv(gym.Env):
         self.colorAA = []
         for i in range(self.agentN):
             self.colorAA.append([[255-i,255-i,0],[0,0,255-i],[255-i,0,0],[0,255-i,0]])
-        self.turnMax = 10000
-        self.turnMaxx = 10000
+        self.turnMax = turnMax
+        self.turnMaxx = turnMax
         self._reset()
     
     def _step(self,AA):

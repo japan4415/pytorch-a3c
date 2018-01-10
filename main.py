@@ -67,7 +67,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
 
     # 環境を宣言
-    env = envTest.create_divehole(args.agent_number,args.field_size)
+    env = envTest.create_divehole(args.agent_number,args.field_size,args.max_episode_length)
 
     # shared_modelをagent数分用意
     shared_model_ary = []
