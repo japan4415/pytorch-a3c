@@ -139,7 +139,7 @@ class DiveholeEnv(gym.Env):
             os.makedirs('log/no' + str(name))
         if mode == 0:
             img = Image.fromarray(np.uint8(state))
-            img = img.resize((int(img.width * 5),int(img.height * 5)),Image.LANCZOS)
+            img = img.resize((int(img.width * 5),int(img.height * 5)),Image.BOX)
             img.save('log/no' + str(name) + "/" + str(stepN) + '.png')
 
 
