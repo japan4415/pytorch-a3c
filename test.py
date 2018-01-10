@@ -84,8 +84,8 @@ def test(rank, args, shared_model_ary, counter):
         #     reward_ary[0]
         # except:
         #     reward_ary = [reward_ary]
-        print(episode_length)
-        print(done)
+        # print(episode_length)
+        # print(done)
 
 
         done = done or episode_length >= env.turnMaxx
@@ -127,7 +127,7 @@ def test(rank, args, shared_model_ary, counter):
                 actions[i].clear()
             state = env.reset()
             time.sleep(args.test_span)
-            print("sleep")
+            # print("sleep")
             kai += 1
 
         state = torch.from_numpy(state)
