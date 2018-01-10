@@ -123,7 +123,8 @@ def test(rank, args, shared_model_ary, counter):
             for i in range(len(shared_model_ary)):
                 actions[i].clear()
             state = env.reset()
-            time.sleep(60)
+            time.sleep(args.test_span)
+            print("sleep")
             kai += 1
 
         state = torch.from_numpy(state)

@@ -47,6 +47,7 @@ parser.add_argument('--no-shared', default=False,
 parser.add_argument('--agent-number', type=int, default=2, 
                     help='agent number')
 parser.add_argument('--field-size', type=int, default=30, help='field size')
+parser.add_argument('--test-span', type=int, default=60, help='test span')
 
 
 if __name__ == '__main__':
