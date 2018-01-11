@@ -35,7 +35,7 @@ class PremadeAgent():
             if diff0 >= diff1:
                 self.targetGoal = 1
             else:
-                self.targetGoal = 1
+                self.targetGoal = 0
         # →
         elif statusA[0][4] == 255:
             if statusA[0][0] > statusA[2][0]:
@@ -53,7 +53,7 @@ class PremadeAgent():
             if diff0 >= diff1:
                 self.targetGoal = 1
             else:
-                self.targetGoal = 1
+                self.targetGoal = 0
         # ↓
         elif statusA[0][2] == 255:
             if statusA[0][1] > statusA[2][1]:
@@ -71,7 +71,7 @@ class PremadeAgent():
             if diff0 >= diff1:
                 self.targetGoal = 1
             else:
-                self.targetGoal = 1
+                self.targetGoal = 0
         # ←
         elif statusA[0][3] == 255:
             if statusA[0][0] < statusA[2][0]:
@@ -89,7 +89,7 @@ class PremadeAgent():
             if diff0 >= diff1:
                 self.targetGoal = 1
             else:
-                self.targetGoal = 1
+                self.targetGoal = 0
 
         if self.targetGoal == 0:
             xdiff = math.fabs(statusA[1][0] - statusA[2][0])
