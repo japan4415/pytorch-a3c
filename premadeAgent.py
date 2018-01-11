@@ -11,7 +11,7 @@ class PremadeAgent():
         self.finishFlag = False
         self.targetGoal = 0
 
-    def getAction(args,statusA):
+    def getAction(self,args,statusA):
         differA = []
         differA2 = []
         for i in range(args.agent_number):
