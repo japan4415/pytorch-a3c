@@ -135,6 +135,6 @@ def test(rank, args, shared_model_ary, counter):
             time.sleep(args.test_span)
             # print("sleep")
             kai += 1
-            p.update(kai%10)
+            p.update(kai%10+1)
 
         state = torch.from_numpy(state)
