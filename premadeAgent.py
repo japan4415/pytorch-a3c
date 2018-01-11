@@ -118,4 +118,4 @@ class PremadeAgent():
                 else:
                     move = 18
 
-        return move
+        return numpy.int(move)
