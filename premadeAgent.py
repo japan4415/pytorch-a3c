@@ -91,6 +91,8 @@ class PremadeAgent():
             else:
                 self.targetGoal = 0
 
+        self.targetGoal = 0
+
         if self.targetGoal == 0:
             xdiff = math.fabs(statusA[1][0] - statusA[2][0])
             ydiff = math.fabs(statusA[1][1] - statusA[2][1])
@@ -118,5 +120,4 @@ class PremadeAgent():
                 else:
                     move = 18
 
-        print(move)
         return numpy.int(move)
