@@ -63,7 +63,7 @@ class DiveholeEnv(gym.Env):
                     # print(i)
                     # print("color")
                     # print(color)
-                    print(self.colorAA[i][color[0][0]])
+                    print(type(self.colorAA[i][color[0][0]]))
                     self.statusA[i][2:5] = self.colorAA[i][color[0][0]]
         
         # Fの判定
