@@ -32,7 +32,7 @@ class DiveholeEnv(gym.Env):
         for i,A in enumerate(AA):
             if self.statusA[i][0] != 102:
                 # Aをnumpy形式に変換
-                A = A.numpy()
+                # A = A.numpy()
                 # 計算ようにstatusをバックアップ
                 statusBA = self.statusA.copy()
                 # 動きの種類を計算

@@ -95,7 +95,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
                 entropy = -(log_prob * prob).sum(1, keepdim=True)
                 entropies_ary[i].append(entropy)
 
-                action_ary.append(prob.multinomial().data)
+                action_ary.append(prob.multinomial().data.numpy())
                 log_prob_ary.append(log_prob.gather(1, Variable(action_ary[i])))
 
 

@@ -61,7 +61,7 @@ class PremadeAgent():
             elif statusA[0][1] > statusA[2][1]:
                 diff0 = 0
             elif statusA[0][1] < statusA[2][1]:
-                diff0 = status[2][1] - statusA[0][1]
+                diff0 = statusA[2][1] - statusA[0][1]
             if statusA[0][1] > statusA[3][1]:
                 diff1 = args.field_size - statusA[0][1] + statusA[3][1]
             elif statusA[0][1] > statusA[3][1]:
