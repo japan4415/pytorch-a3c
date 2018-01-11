@@ -40,8 +40,8 @@ parser.add_argument('--num-steps', type=int, default=20,
                     help='number of forward steps in A3C (default: 20)')
 parser.add_argument('--max-episode-length', type=int, default=10000,
                     help='maximum length of an episode (default: 1000000)')
-parser.add_argument('--env-name', default='PongDeterministic-v4',
-                    help='environment to train on (default: PongDeterministic-v4)')
+parser.add_argument('--env-name', default='exp',
+                    help='exp name for model hozon')
 parser.add_argument('--no-shared', default=False,
                     help='use an optimizer without shared momentum.')
 parser.add_argument('--agent-number', type=int, default=2, 
@@ -75,6 +75,16 @@ if __name__ == '__main__':
         shared_model_ary.append(ActorCritic(args.field_size, env.action_space))
     for i in range(len(shared_model_ary)):
         shared_model_ary[i].share_memory()
+    
+    # --env-nameと同じ名前のモデルが存在したら読み込む
+    if not os.path.isdir("model"):
+        os.makedir("model")
+    if os.path.isdir("model/"+args.env_name):
+        for i in range(args.agent_number):
+            param = torch.load('model/'+args.env_name+str(i)+".pth")
+            shared_model_ary[i].load_state_dict(param)
+    else:
+        os.makedirs("model/"+args.env_name)
 
     # optimizerもagent数分用意
     optimizer_ary = []

@@ -54,7 +54,7 @@ def test(rank, args, shared_model_ary, counter):
     y = []
 
     # progressbar表示用
-    p = ProgressBar(kai, kai+9)
+    p = ProgressBar(1, 10)
 
     while True:
         # print("Test Start")
@@ -125,7 +125,9 @@ def test(rank, args, shared_model_ary, counter):
                     total_reward / 10, 
                     episode_length))
                 total_reward = 0
-                p = ProgressBar(kai+1, kai+10)
+                p = ProgressBar(1, 10)
+                for i in range(len(shared_model_ary)):
+                    torch.save(shared_model_ary[i].state_dict(), 'model/'+args.env_name+str(i)+".pth")
             episode_length = 0
             for i in range(len(shared_model_ary)):
                 actions[i].clear()
@@ -133,6 +135,6 @@ def test(rank, args, shared_model_ary, counter):
             time.sleep(args.test_span)
             # print("sleep")
             kai += 1
-            p.update(kai)
+            p.update(kai%10)
 
         state = torch.from_numpy(state)
