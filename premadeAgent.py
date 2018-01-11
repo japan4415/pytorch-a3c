@@ -19,7 +19,7 @@ class PremadeAgent():
             differA2.append(math.sqrt(math.exp((statusA[1][0] - statusA[args.agent_number+i][0]),2) + math.exp((statusA[1][1] - statusA[args.agent_number+i][1]),2)))
         self.otherTarget = 0
         # ↑
-        if statusA[0][5] == 0:
+        if statusA[0][2] == 255 and statusA[0][3] == 255:
             if statusA[0][1] < statusA[3][1]:
                 diff0 = statusA[0][1] + args.field_size - statusA[3][1]
             elif statusA[0][1] > statusA[3][1]:
@@ -37,7 +37,7 @@ class PremadeAgent():
             else:
                 self.targetGoal = 1
         # →
-        elif statusA[0][5] == 1:
+        elif statusA[0][4] == 255:
             if statusA[0][0] > statusA[3][0]:
                 diff0 = args.field_size - statusA[0][1] + statusA[3][0]
             elif statusA[0][0] > statusA[3][0]:
@@ -55,7 +55,7 @@ class PremadeAgent():
             else:
                 self.targetGoal = 1
         # ↓
-        elif statusA[0][5] == 2:
+        elif statusA[0][2] == 255:
             if statusA[0][1] > statusA[3][1]:
                 diff0 = args.field_size - statusA[0][1] + statusA[3][1]
             elif statusA[0][1] > statusA[3][1]:
@@ -73,7 +73,7 @@ class PremadeAgent():
             else:
                 self.targetGoal = 1
         # ←
-        elif statusA[0][5] == 3:
+        elif statusA[0][3] == 255:
             if statusA[0][0] < statusA[3][0]:
                 diff0 = args.field_size + statusA[0][1] - statusA[3][0]
             elif statusA[0][0] > statusA[3][0]:
