@@ -98,9 +98,9 @@ class PremadeAgent():
             ydiff = abs(statusA[1][1] - statusA[2][1])
             if xdiff >= ydiff:
                 if statusA[1][0] - statusA[2][0] >=0:
-                    move = 1
-                else:
                     move = 13
+                else:
+                    move = 1
             else:
                 if statusA[1][1] - statusA[2][1] >=0:
                     move = 19
