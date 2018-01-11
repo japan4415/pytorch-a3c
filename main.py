@@ -48,7 +48,7 @@ parser.add_argument('--agent-number', type=int, default=2,
                     help='agent number')
 parser.add_argument('--field-size', type=int, default=30, help='field size')
 parser.add_argument('--test-span', type=int, default=60, help='test span')
-parser.add_argument('--delete-mode', type=bool, default=True help='delete agent?')
+parser.add_argument('--delete-mode', type=bool, default=True, help='delete agent?')
 
 
 if __name__ == '__main__':
