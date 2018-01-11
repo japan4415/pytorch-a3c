@@ -78,7 +78,7 @@ if __name__ == '__main__':
     
     # --env-nameと同じ名前のモデルが存在したら読み込む
     if not os.path.isdir("model"):
-        os.makedir("model")
+        os.mkdir("model")
     if os.path.isdir("model/"+args.env_name):
         for i in range(args.agent_number):
             param = torch.load('model/'+args.env_name+str(i)+".pth")
