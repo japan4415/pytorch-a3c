@@ -55,7 +55,7 @@ class PremadeAgent():
             else:
                 self.targetGoal = 0
         # ↓
-        elif statusA[0][2] == 255:
+        elif statusA[0][2] == 255 and statusA[0][3] == 0:
             if statusA[0][1] > statusA[2][1]:
                 diff0 = args.field_size - statusA[0][1] + statusA[2][1]
             elif statusA[0][1] == statusA[2][1]:
@@ -73,7 +73,7 @@ class PremadeAgent():
             else:
                 self.targetGoal = 0
         # ←
-        elif statusA[0][3] == 255:
+        elif statusA[0][3] == 255 and statusA[0][2] == 0:
             if statusA[0][0] < statusA[2][0]:
                 diff0 = args.field_size + statusA[0][1] - statusA[2][0]
             elif statusA[0][0] == statusA[2][0]:
