@@ -8,6 +8,8 @@ from model import ActorCritic
 
 import envTest
 
+import premadeAgent
+
 
 def ensure_shared_grads(model, shared_model):
     for param, shared_param in zip(model.parameters(),
@@ -41,6 +43,10 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
     # ???
     for i in range(len(shared_model_ary)):
         model_ary[i].train()
+
+    # premade agentが必要な場合宣言
+    if args.with_premade:
+        pA = premadeAgent.PremadeAgent(1)
 
     state = env.reset()
     state = torch.from_numpy(state)
@@ -91,6 +97,11 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
                 action_ary.append(prob.multinomial().data)
                 log_prob_ary.append(log_prob.gather(1, Variable(action_ary[i])))
+
+
+
+            if args.with_premade:
+                action_ary[1] = pA.getAction(args,env.statusA)
 
             # 実行してs,r,dを受け取る
             state, reward_ary, done = env.step(action_ary)

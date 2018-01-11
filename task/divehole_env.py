@@ -23,7 +23,7 @@ class DiveholeEnv(gym.Env):
         # 色の宣言 黄色 青 赤 黄緑
         self.colorAA = []
         for i in range(self.agentN):
-            self.colorAA.append([[255-i,255-i,0],[0,0,255-i],[255-i,0,0],[0,255-i,0]])
+            self.colorAA.append([[255-i,255-i,0,0],[0,0,255-i,1],[255-i,0,0,2],[0,255-i,0,3]])
         self.turnMax = turnMax
         self.turnMaxx = turnMax
         self._reset()

@@ -10,6 +10,7 @@ from model import ActorCritic
 
 # オリジナルタスクのimport
 import envTest
+import premadeAgent
 
 import matplotlib as mpl
 mpl.use("Agg")
@@ -21,6 +22,10 @@ from progressbar import ProgressBar
 def test(rank, args, shared_model_ary, counter):
     print('lets start!!!')
     torch.manual_seed(args.seed + rank)
+
+    # premade agentが必要な場合宣言
+    if args.with_premade:
+        pA = premadeAgent.PremadeAgent(1)
 
     #env = create_atari_env(args.env_name)
     #env.seed(args.seed + rank)
@@ -80,7 +85,12 @@ def test(rank, args, shared_model_ary, counter):
             prob = F.softmax(logit,dim=1)
             action_ary.append(prob.max(1, keepdim=True)[1].data)
 
+        if args.with_premade:
+            action_ary[1] = pA.getAction(args,env.statusA)
+
         state, reward_ary, done= env.step(action_ary)
+
+
     
 
         # try:
