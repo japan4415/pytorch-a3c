@@ -94,30 +94,32 @@ class PremadeAgent():
         self.targetGoal = 0
 
         if self.targetGoal == 0:
-            xdiff = math.fabs(statusA[1][0] - statusA[2][0])
-            ydiff = math.fabs(statusA[1][1] - statusA[2][1])
+            xdiff = math.abs(statusA[1][0] - statusA[2][0])
+            ydiff = math.abs(statusA[1][1] - statusA[2][1])
             if xdiff >= ydiff:
                 if statusA[1][0] - statusA[2][0] >=0:
-                    move = 2
+                    move = 7
                 else:
-                    move = 9
+                    move = 19
             else:
                 if statusA[1][1] - statusA[2][1] >=0:
-                    move = 11
+                    move = 1
                 else:
-                    move = 18
+                    move = 13
         elif self.targetGoal == 1:
-            xdiff = math.fabs(statusA[1][0] - statusA[3][0])
-            ydiff = math.fabs(statusA[1][1] - statusA[3][1])
+            xdiff = math.abs(statusA[1][0] - statusA[3][0])
+            ydiff = math.abs(statusA[1][1] - statusA[3][1])
             if xdiff >= ydiff:
                 if statusA[1][0] - statusA[3][0] >=0:
-                    move = 2
+                    move = 7
                 else:
-                    move = 9
+                    move = 19
             else:
                 if statusA[1][1] - statusA[3][1] >=0:
-                    move = 11
+                    move = 1
                 else:
-                    move = 18
+                    move = 13
+        print(statusA)
+        print(move)
 
         return numpy.int(move)
