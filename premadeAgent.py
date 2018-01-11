@@ -14,9 +14,9 @@ class PremadeAgent():
     def getAction(self,args,statusA):
         differA = []
         differA2 = []
-        for i in range(args.agent_number):
-            differA.append(math.sqrt(math.exp((statusA[0][0] - statusA[args.agent_number+i][0]),2) + math.exp((statusA[0][1] - statusA[args.agent_number+i][1]),2)))
-            differA2.append(math.sqrt(math.exp((statusA[1][0] - statusA[args.agent_number+i][0]),2) + math.exp((statusA[1][1] - statusA[args.agent_number+i][1]),2)))
+        # for i in range(args.agent_number):
+        #     differA.append(math.sqrt(math.exp((statusA[0][0] - statusA[args.agent_number+i][0]),2) + math.exp((statusA[0][1] - statusA[args.agent_number+i][1]),2)))
+        #     differA2.append(math.sqrt(math.exp((statusA[1][0] - statusA[args.agent_number+i][0]),2) + math.exp((statusA[1][1] - statusA[args.agent_number+i][1]),2)))
         self.otherTarget = 0
         # ↑
         if statusA[0][2] == 255 and statusA[0][3] == 255:
