@@ -23,7 +23,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
     # 環境を宣言
     #env = create_atari_env(args.env_name)
-    env = envTest.create_divehole(args.agent_number,args.field_size,args.max_episode_length)
+    env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
     #env.seed(args.seed + rank)
 
     # モデルの宣言

@@ -13,8 +13,9 @@ import os.path
 class DiveholeEnv(gym.Env):
     metadata = {'render.model':['normal']}
 
-    def __init__(self,agentN,fieldSize,turnMax):
+    def __init__(self,args,agentN,fieldSize,turnMax):
         print("env inited")
+        self.args = args
         self.availableA = range(20)
         self.action_space = 20
         self.agentN = agentN
@@ -75,6 +76,9 @@ class DiveholeEnv(gym.Env):
                 else:
                     if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
                         fA[i2] = 1
+                        if self.args.delete_mode:
+                            self.statusA[i][0] = 102
+                            self.statusA[i][1] = 102
                         self.statusA[self.agentN+i2][0] = 102
                         self.statusA[self.agentN+i2][1] = 102
         if sum(fA) == self.agentN:

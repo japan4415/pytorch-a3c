@@ -48,6 +48,7 @@ parser.add_argument('--agent-number', type=int, default=2,
                     help='agent number')
 parser.add_argument('--field-size', type=int, default=30, help='field size')
 parser.add_argument('--test-span', type=int, default=60, help='test span')
+parser.add_argument('--delete-mode', type=bool, default=True help='delete agent?')
 
 
 if __name__ == '__main__':
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
 
     # 環境を宣言
-    env = envTest.create_divehole(args.agent_number,args.field_size,args.max_episode_length)
+    env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
 
     # shared_modelをagent数分用意
     shared_model_ary = []
