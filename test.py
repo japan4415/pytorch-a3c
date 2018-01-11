@@ -105,7 +105,7 @@ def test(rank, args, shared_model_ary, counter):
 
         # a quick hack to prevent the agent from stucking
         for i in range(len(shared_model_ary)):
-            actions[i].append(action_ary[i].numpy())
+            actions[i].append(action_ary[i])
             if actions[i].count(actions[i][0]) == actions[i].maxlen:
                 done = True
                 # print('repeat max')
