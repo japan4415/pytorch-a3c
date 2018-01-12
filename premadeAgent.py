@@ -91,7 +91,10 @@ class PremadeAgent():
             else:
                 self.targetGoal = 0
 
-        self.targetGoal = 0
+        if statusA[2][0] == 102:
+            self.targetGoal = 1
+        elif statusA[3][0] == 102:
+            self.targetGoal =0
 
         if self.targetGoal == 0:
             xdiff = abs(statusA[1][0] - statusA[2][0])
