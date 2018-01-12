@@ -122,7 +122,7 @@ class PremadeAgent():
                     move = 19
                 else:
                     move = 7
-        print(statusA)
-        print(move)
+        # print(statusA)
+        # print(move)
 
         return numpy.int(move)
