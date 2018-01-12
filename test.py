@@ -52,11 +52,13 @@ def test(rank, args, shared_model_ary, counter):
 
     # reward合計
     total_reward = 0
+    total_total_reward = 0
 
     # graph表示用
     x = []
     xt = []
     y = []
+    yt = []
 
     # progressbar表示用
     p = ProgressBar(1, 10)
@@ -114,16 +116,21 @@ def test(rank, args, shared_model_ary, counter):
 
         if done:
             total_reward += reward_ary[0]
+            total_total_reward += reward_ary[0]
             # graph出力
             x.append(counter.value)
             xt.append(time.time() - start_time)
             y.append(reward_ary[0])
+            yt.append(total_total_reward/kai)
             plt.clf()
             plt.plot(x,y,marker=".")
             plt.savefig("log/graph.png")
             plt.clf()
             plt.plot(xt,y,marker=".")
             plt.savefig("log/graph2.png")
+            plt.clf()
+            plt.plot(x,yt,marker=".")
+            plt.savefig("log/graph3.png")
 
             if episode_length != env.turnMaxx and reward_ary[0] > 0:
                 print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
