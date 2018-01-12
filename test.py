@@ -128,8 +128,9 @@ def test(rank, args, shared_model_ary, counter):
             if episode_length != env.turnMaxx and reward_ary[0] > 0:
                 print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
             if kai%10 == 0:
-                print("Time {}, num steps {}, FPS {:.0f}, reward/10 {}, episode length {}".format(
+                print("Time {}, Kai {}, num steps {}, FPS {:.0f}, reward/10 {}, episode length {}".format(
                     time.strftime("%Hh %Mm %Ss",time.gmtime(time.time() - start_time)),
+                    kai,
                     counter.value, 
                     counter.value / (time.time() - start_time),
                     total_reward / 10, 
