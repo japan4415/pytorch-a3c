@@ -109,6 +109,8 @@ class PremadeAgent():
                     move = 19
                 else:
                     move = 7
+            if xdiff == 0 and ydiff == 0:
+                move = 0
         elif self.targetGoal == 1:
             xdiff = abs(statusA[1][0] - statusA[3][0])
             ydiff = abs(statusA[1][1] - statusA[3][1])
@@ -122,6 +124,8 @@ class PremadeAgent():
                     move = 19
                 else:
                     move = 7
+            if xdiff == 0 and ydiff == 0:
+                move = 0
         # print(statusA)
         # print(move)
 
