@@ -23,7 +23,7 @@ class DiveholeEnv(gym.Env):
         # 色の宣言 黄色 青 赤 黄緑
         self.colorAA = []
         for i in range(self.agentN):
-            self.colorAA.append([[255-i,255-i,0],[0,0,255-i],[255-i,0,0],[0,255-i,0]])
+            self.colorAA.append([[255-i*50,255-i*50,0],[0,0,255-i*50],[255-i*50,0,0],[0,255-i*50,0]])
         self.turnMax = turnMax
         self.turnMaxx = turnMax
         self._reset()
@@ -68,29 +68,38 @@ class DiveholeEnv(gym.Env):
         
         # Fの判定
         fA = [0] * self.agentN
+        # ゴールだけ消える版
+        # for i in range(self.agentN):
+        #     for i2 in range(self.agentN):
+        #         #print(i+self.agentN+i2)
+        #         if self.statusA[self.agentN+i2][0] == 102:
+        #             fA[i2] = 1
+        #         else:
+        #             if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
+        #                 fA[i2] = 1
+        #                 if self.args.delete_mode:
+        #                     self.statusA[i][0] = 102
+        #                     self.statusA[i][1] = 102
+        #                 self.statusA[self.agentN+i2][0] = 102
+        #                 self.statusA[self.agentN+i2][1] = 102
+        # if sum(fA) == self.agentN:
+        #     self.F = True
+        # else:
+        #     self.F = False
+        # 両方重なったら終了版
         for i in range(self.agentN):
             for i2 in range(self.agentN):
-                #print(i+self.agentN+i2)
-                if self.statusA[self.agentN+i2][0] == 102:
-                    fA[i2] = 1
-                else:
-                    if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
-                        fA[i2] = 1
-                        if self.args.delete_mode:
-                            self.statusA[i][0] = 102
-                            self.statusA[i][1] = 102
-                        self.statusA[self.agentN+i2][0] = 102
-                        self.statusA[self.agentN+i2][1] = 102
-        if sum(fA) == self.agentN:
+                if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
+                    fA[0] += 1
+        if fA[0] == self.agentN and (self.statusA[0][0] != self.statusA[1][0] or self.statusA[0][1] != self.statusA[1][1]):
             self.F = True
-        else:
-            self.F = False
 
         # R計算
         if self.turn <= self.turnMax:
             if self.F:
-                R = [(self.turnMax - self.turn) / self.turnMax,(self.turnMax - self.turn) / self.turnMax]
-                # print("yay: "+str(R[0]))
+                # R = [(self.turnMax - self.turn) / self.turnMax,(self.turnMax - self.turn) / self.turnMax]
+                # # print("yay: "+str(R[0]))
+                R = [1,1]
             else:
                 R = [0,0]
         else:
