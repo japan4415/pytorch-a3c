@@ -134,7 +134,7 @@ def test(rank, args, shared_model_ary, counter):
         x.append(currentCounter)
         y.append(sum(rewardStore) / test_kaisu)
         bunsan = 0
-        for j in range(rewardStore):
+        for j in rewardStore:
             bunsan += pow((j - sum(rewardStore) / test_kaisu),2)
         bunsan = bunsan / test_kaisu
         yb.append(bunsan)
