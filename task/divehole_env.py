@@ -92,11 +92,13 @@ class DiveholeEnv(gym.Env):
                 if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
                     fA[0] += 1
         if fA[0] == self.agentN and (self.statusA[0][0] != self.statusA[1][0] or self.statusA[0][1] != self.statusA[1][1]):
-            print(fA[0])
+            #print(fA[0])
             self.F = True
+        else:
+            self.F = False
 
         # R計算
-        if self.turn <= self.turnMax:
+        if self.turn < self.turnMax:
             if self.F:
                 # R = [(self.turnMax - self.turn) / self.turnMax,(self.turnMax - self.turn) / self.turnMax]
                 # # print("yay: "+str(R[0]))
@@ -105,7 +107,7 @@ class DiveholeEnv(gym.Env):
                 R = [0,0]
         else:
             R = [0,0]
-            self.F = False
+            self.F = True
 
         # 再レンダリング
         self.field = np.zeros(((self.fieldSize,self.fieldSize,3)))
