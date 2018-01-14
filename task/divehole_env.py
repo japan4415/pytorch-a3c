@@ -92,6 +92,7 @@ class DiveholeEnv(gym.Env):
                 if self.statusA[i][0] == self.statusA[self.agentN+i2][0] and self.statusA[i][1] == self.statusA[self.agentN+i2][1]:
                     fA[0] += 1
         if fA[0] == self.agentN and (self.statusA[0][0] != self.statusA[1][0] or self.statusA[0][1] != self.statusA[1][1]):
+            print(fA[0])
             self.F = True
 
         # R計算
