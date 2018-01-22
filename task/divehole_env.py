@@ -123,7 +123,8 @@ class WolfPackAlpha(gym.Env):
     def checkPosition(self,x,y):
         print(x)
         print(y)
-        position = np.ndarray([x,y])
+        position=[x,y]
+        position = np.ndarray(position)
         for i in range(self.args.agent_number+1):
             if np.allclose(self.statusAry[i][0,2],position):
                 return False
