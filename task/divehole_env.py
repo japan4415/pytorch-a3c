@@ -154,7 +154,7 @@ class WolfPackAlpha(gym.Env):
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
         for i in range(len(targetPositionAry)):
-            if checkPosition(i):
+            if self.checkPosition(i):
                 targetPositionAryTrue.append(i)
         distanceAry = np.array([])
         for i in range(len(targetPositionAryTrue)):
@@ -166,7 +166,7 @@ class WolfPackAlpha(gym.Env):
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
         if abs(targetX - self.statusAry[self.args.agent_number+1][0]) >= abs(targetX - self.statusAry[self.args.agent_number+1][1]):
             if targetX - self.statusAry[self.args.agent_number+1][0] > 0:
-                if checkPosition([self.statusAry[self.args.agent_number][0]+1,self.statusAry[self.args.agent_number+1][1]]):
+                if self.checkPosition([self.statusAry[self.args.agent_number][0]+1,self.statusAry[self.args.agent_number+1][1]]):
                     move = 2
                 else:
                     if targetY - self.statusAry[self.args.agent_number][1] > 0:
@@ -174,7 +174,7 @@ class WolfPackAlpha(gym.Env):
                     else:
                         move = 3
             else:
-                if checkPosition([self.statusAry[self.args.agent_number][0]-1,self.statusAry[self.args.agent_number+1][1]]):
+                if self.checkPosition([self.statusAry[self.args.agent_number][0]-1,self.statusAry[self.args.agent_number+1][1]]):
                     move = 4
                 else:
                     if targetY - self.statusAry[self.args.agent_number][1] > 0:
@@ -183,7 +183,7 @@ class WolfPackAlpha(gym.Env):
                         move = 3
         else:
             if targetY - self.statusAry[self.args.agent_number+1][1] > 0:
-                if checkPosition([self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number+1][1]+1]):
+                if self.checkPosition([self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number+1][1]+1]):
                     move = 1
                 else:
                     if targetX - self.statusAry[self.args.agent_number][0] > 0:
@@ -191,7 +191,7 @@ class WolfPackAlpha(gym.Env):
                     else:
                         move = 4
             else:
-                if checkPosition([self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number+1][1]-1]):
+                if self.checkPosition([self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number+1][1]-1]):
                     move = 3
                 else:
                     if targetX - self.statusAry[self.args.agent_number][0] > 0:
