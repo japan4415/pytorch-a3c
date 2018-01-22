@@ -154,6 +154,7 @@ class WolfPackAlpha(gym.Env):
         y = self.statusAry[self.args.agent_number][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
+        print(targetPositionAry)
         for i in range(len(targetPositionAry)):
             if self.checkPosition(targetPositionAry[i][0],targetPositionAry[i][1]):
                 targetPositionAryTrue.append(i)
