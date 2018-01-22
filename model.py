@@ -31,10 +31,10 @@ def weights_init(m):
 class ActorCritic(torch.nn.Module):
     def __init__(self, num_inputs, action_space):
         super(ActorCritic, self).__init__()
-        self.conv1 = nn.Conv2d(num_inputs, 32, 3, stride=2, padding=1).double()
-        self.conv2 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
-        self.conv3 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
-        self.conv4 = nn.Conv2d(32, 32, 3, stride=2, padding=1).double()
+        self.conv1 = nn.Conv2d(num_inputs, 32, 3, stride=2, padding=1)
+        self.conv2 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
+        self.conv3 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
+        self.conv4 = nn.Conv2d(32, 32, 3, stride=2, padding=1)
 
         self.lstm = nn.LSTMCell(32, 256)
 
@@ -58,7 +58,7 @@ class ActorCritic(torch.nn.Module):
 
     def forward(self, inputs):
         inputs, (hx, cx) = inputs
-        x = F.elu(self.conv1(inputs.float()))
+        x = F.elu(self.conv1(inputs))
         x = F.elu(self.conv2(x))
         x = F.elu(self.conv3(x))
         x = F.elu(self.conv4(x))
