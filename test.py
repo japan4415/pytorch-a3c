@@ -10,6 +10,7 @@ from model import ActorCritic
 
 # オリジナルタスクのimport
 import envTest
+from task import divehole_env
 import premadeAgent
 
 import matplotlib as mpl
@@ -17,11 +18,17 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt
 
 from progressbar import ProgressBar
-
+import os
+import shutil
 
 def test(rank, args, shared_model_ary, counter):
     print('lets start!!!')
     torch.manual_seed(args.seed + rank)
+
+    # log書き込み環境の整理
+    if os.path.isdir("./log"):
+        shutil.rmtree("./log")
+    os.makedirs('log/'+args.env_name)
 
     # premade agentが必要な場合宣言
     if args.with_premade:
@@ -30,12 +37,13 @@ def test(rank, args, shared_model_ary, counter):
     #env = create_atari_env(args.env_name)
     #env.seed(args.seed + rank)
 
-    env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
+    #env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
+    env = divehole_env.WolfPackAlpha(args)
 
     model_ary = []
     for i in range(len(shared_model_ary)):
         #model_ary.append(ActorCritic(env.observation_space.shape[0], env.action_space))
-        model_ary.append(ActorCritic(env.field.shape[0], env.action_space))
+        model_ary.append(ActorCritic(args.field_size, env.action_space))
         model_ary[i].eval()
 
     state = env.reset()
@@ -62,6 +70,7 @@ def test(rank, args, shared_model_ary, counter):
     yb = []
 
     test_kaisu = 100
+    episode_amount = 0
 
     # progressbar表示用
     p = ProgressBar(0, test_kaisu)
@@ -72,15 +81,19 @@ def test(rank, args, shared_model_ary, counter):
         currentCounter = counter.value
         rewardStore = []
 
+        
+
         for i in range(len(shared_model_ary)):
             model_ary[i].load_state_dict(shared_model_ary[i].state_dict())
 
         for i in range(len(shared_model_ary)):
-            torch.save(shared_model_ary[i].state_dict(), 'model/'+args.env_name+str(i)+".pth")
+            torch.save(shared_model_ary[i].state_dict(), 'model/'+args.env_name+'/'+'model'+str(i)+'.pth')
 
         p = ProgressBar(0, test_kaisu)
 
         for kai in range(test_kaisu):
+
+            episode_amount += 1
 
             done = False
             hx_ary = []
@@ -110,18 +123,38 @@ def test(rank, args, shared_model_ary, counter):
                 done = done or episode_length >= env.turnMaxx
 
                 for i in range(len(shared_model_ary)):
+                    # スタックしていた場合，終了
                     actions[i].append(action_ary[i])
                     if actions[i].count(actions[i][0]) == actions[i].maxlen:
                         done = True
                         episode_length = env.turnMaxx
+                    # logファイルにstate書き込み
+                    f=open('log/'+args.env_name+'/state/'+currentCounter+'/'+episode_amount+'.log','w')
+                    text = str(env.turn-1) + ' '
+                    for j in range(len(shared_model_ary)+1):
+                        text = text + str(env.stateAry[j][0]) + ' ' + str(env.stateAry[j][1]) +  ' ' + str(env.stateAry[j][2]) +  ' '
+                    text = text + '\n'
+                    f.writelines(text)
+                    f.close()
+                    # logファイルにmove書き込み
+                    f=open('log/'+args.env_name+'/move/'+currentCounter+'/'+episode_amount+'.log','w')
+                    text = str(env.turn-1) + ' ' + str(action_ary[0]) + ' ' + str(action_ary[1]) +  ' ' + str(action_ary[2]) +'\n'
+                    f.writelines(text)
+                    f.close()
 
                 if kai==0:
                     env.rrender(state,kai,episode_length,0)
 
                 if episode_length != env.turnMaxx and reward_ary[0] > 0:
-                    print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
+                    pass
+                    #print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
 
             rewardStore.append(episode_length)
+            # logファイルにresult書き込み
+            f=open('log/'+args.env_name+'/result.log','w')
+            text = str(episode_amount) + ' ' + str(currentCounter) + ' ' + str(episode_length) +'\n'
+            f.writelines(text)
+            f.close() 
             p.update(kai)
 
         print("Time {}, Kai {}, num steps {}, FPS {:.0f}, reward/10 {}".format(

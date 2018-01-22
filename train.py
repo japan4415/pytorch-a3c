@@ -5,6 +5,7 @@ from torch.autograd import Variable
 
 from envs import create_atari_env
 from model import ActorCritic
+from task import divehole_env
 
 import envTest
 
@@ -25,14 +26,14 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
     # 環境を宣言
     #env = create_atari_env(args.env_name)
-    env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
+    env = divehole_env.WolfPackAlpha(args)
     #env.seed(args.seed + rank)
 
     # モデルの宣言
     model_ary = []
     for i in range(len(shared_model_ary)):
         #model_ary.append(ActorCritic(env.observation_space.shape[0], env.action_space))
-        model_ary.append(ActorCritic(env.field.shape[0], env.action_space))
+        model_ary.append(ActorCritic(env.args.field_size, env.action_space))
 
     # オプティマイザーの宣言
     optimizer_ary = [None] * len(shared_model_ary)
