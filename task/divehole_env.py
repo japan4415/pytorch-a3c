@@ -128,9 +128,9 @@ class WolfPackAlpha(gym.Env):
         for i in range(self.args.agent_number+1):
             if np.allclose(self.statusAry[i][0:2],position):
                 return False
-            if position[0] < 0 or position[0] > self.args.field_size - 1:
+            if position[i][0] < 0 or position[i][0] > self.args.field_size - 1:
                 return False
-            if position[1] < 0 or position[1] > self.args.field_size - 1:
+            if position[i][1] < 0 or position[i][1] > self.args.field_size - 1:
                 return False
         return True
 
