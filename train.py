@@ -101,8 +101,8 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
 
 
 
-            if args.with_premade:
-                action_ary[1] = pA.getAction(args,env.statusA)
+            # if args.with_premade:
+            #     action_ary[1] = pA.getAction(args,env.statusAry)
 
             # 実行してs,r,dを受け取る
             state, reward_ary, done = env.step(action_ary)

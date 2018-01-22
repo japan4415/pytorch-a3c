@@ -117,8 +117,8 @@ def test(rank, args, shared_model_ary, counter):
                     value, logit, (hx_ary[i], cx_ary[i]) = model_ary[i]((Variable(state.unsqueeze(0), volatile=True), (hx_ary[i], cx_ary[i])))
                     prob = F.softmax(logit,dim=1)
                     action_ary.append(prob.max(1, keepdim=True)[1].data.numpy())
-                if args.with_premade:
-                    action_ary[1] = pA.getAction(args,env.statusA)
+                # if args.with_premade:
+                #     action_ary[1] = pA.getAction(args,env.statusA)
 
                 state, reward_ary, done= env.step(action_ary)
                 done = done or episode_length >= env.turnMaxx
