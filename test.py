@@ -112,6 +112,7 @@ def test(rank, args, shared_model_ary, counter):
 
                 # 行動選択
                 state = torch.from_numpy(state)
+                print(state)
                 for i in range(len(shared_model_ary)):
                     value, logit, (hx_ary[i], cx_ary[i]) = model_ary[i]((Variable(state.unsqueeze(0), volatile=True), (hx_ary[i], cx_ary[i])))
                     prob = F.softmax(logit,dim=1)
