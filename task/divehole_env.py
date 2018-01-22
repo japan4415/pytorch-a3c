@@ -154,7 +154,7 @@ class WolfPackAlpha(gym.Env):
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
         for i in range(len(targetPositionAry)):
-            if self.checkPosition(i):
+            if self.checkPosition(targetPositionAry[i][0],targetPositionAry[i][1]):
                 targetPositionAryTrue.append(i)
         distanceAry = np.array([])
         for i in range(len(targetPositionAryTrue)):
