@@ -121,11 +121,11 @@ class WolfPackAlpha(gym.Env):
         return self.fieldAry,self.reward,self.done,actionAry
 
     def checkPosition(self,x,y):
-        print(x)
-        print(y)
         position=[x,y]
         position = np.ndarray(position)
         for i in range(self.args.agent_number+1):
+            print(self.statusAry[i][0:2])
+            print(position)
             if np.allclose(self.statusAry[i][0:2],position):
                 return False
             if position[i][0] < 0 or position[i][0] > self.args.field_size - 1:
@@ -156,7 +156,6 @@ class WolfPackAlpha(gym.Env):
         y = self.statusAry[self.args.agent_number][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
-        print(targetPositionAry)
         for i in range(len(targetPositionAry)):
             if self.checkPosition(targetPositionAry[i][0],targetPositionAry[i][1]):
                 targetPositionAryTrue.append(i)
