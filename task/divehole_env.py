@@ -53,7 +53,7 @@ class WolfPackAlpha(gym.Env):
 
     def step(self,actionAry):
         if self.args.with_premade:
-            actionAry[0] = premadeMove()
+            actionAry[0] = self.premadeMove()
         self.turn += 1
         for i in range(self.args.agent_number):
             color = actionAry[i] // 5
