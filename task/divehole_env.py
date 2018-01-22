@@ -149,8 +149,8 @@ class WolfPackAlpha(gym.Env):
                 self.done = False
 
     def premadeMove(self):
-        x = self.statusAry[self.args.agent_number+1][0]
-        y = self.statusAry[self.args.agent_number+1][1]
+        x = self.statusAry[self.args.agent_number][0]
+        y = self.statusAry[self.args.agent_number][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
         for i in range(len(targetPositionAry)):
