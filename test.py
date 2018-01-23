@@ -120,39 +120,42 @@ def test(rank, args, shared_model_ary, counter):
                 # if args.with_premade:
                 #     action_ary[1] = pA.getAction(args,env.statusA)
 
-                state, reward_ary, done= env.step(action_ary)
-                done = done or episode_length >= env.turnMaxx
+                state, reward_ary, done, act_action_ary= env.step(action_ary)
+                done = done or episode_length >= args.max_episode_length
 
                 for i in range(len(shared_model_ary)):
                     # スタックしていた場合，終了
                     actions[i].append(action_ary[i])
                     if actions[i].count(actions[i][0]) == actions[i].maxlen:
                         done = True
-                        episode_length = env.turnMaxx
+                        episode_length = args.max_episode_length
                     # logファイルにstate書き込み
-                    f=open('log/'+args.env_name+'/state/'+currentCounter+'/'+episode_amount+'.log','w')
+                    # print('log書くよ')
+                    os.makedirs('log/'+args.env_name+'/state/'+str(currentCounter),exist_ok=True)
+                    f=open('log/'+args.env_name+'/state/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
                     text = str(env.turn-1) + ' '
                     for j in range(len(shared_model_ary)+1):
-                        text = text + str(env.stateAry[j][0]) + ' ' + str(env.stateAry[j][1]) +  ' ' + str(env.stateAry[j][2]) +  ' '
+                        text = text + str(env.statusAry[j][0]) + ' ' + str(env.statusAry[j][1]) +  ' ' + str(env.statusAry[j][2]) +  ' '
                     text = text + '\n'
                     f.writelines(text)
                     f.close()
                     # logファイルにmove書き込み
-                    f=open('log/'+args.env_name+'/move/'+currentCounter+'/'+episode_amount+'.log','w')
-                    text = str(env.turn-1) + ' ' + str(action_ary[0]) + ' ' + str(action_ary[1]) +  ' ' + str(action_ary[2]) +'\n'
+                    os.makedirs('log/'+args.env_name+'/move/'+str(currentCounter),exist_ok=True)
+                    f=open('log/'+args.env_name+'/move/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
+                    text = str(env.turn-1) + ' ' + str(act_action_ary[0]) + ' ' + str(act_action_ary[1]) +  ' ' + str(act_action_ary[2]) +'\n'
                     f.writelines(text)
                     f.close()
 
-                if kai==0:
-                    env.rrender(state,kai,episode_length,0)
+                # if kai==0:
+                    # env.rrender(state,kai,episode_length,0)
 
-                if episode_length != env.turnMaxx and reward_ary[0] > 0:
+                if episode_length != args.max_episode_length and reward_ary[0] > 0:
                     pass
                     #print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
 
             rewardStore.append(episode_length)
             # logファイルにresult書き込み
-            f=open('log/'+args.env_name+'/result.log','w')
+            f=open('log/'+args.env_name+'/result.log','a')
             text = str(episode_amount) + ' ' + str(currentCounter) + ' ' + str(episode_length) +'\n'
             f.writelines(text)
             f.close() 
