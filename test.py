@@ -125,7 +125,7 @@ def test(rank, args, shared_model_ary, counter):
 
                 i=1
                 # スタックしていた場合，終了
-                actions[i].append(action_ary[i])
+                actions[i].append(action)
                 if actions[i].count(actions[i][0]) == actions[i].maxlen:
                     done = True
                     episode_length = args.max_episode_length
