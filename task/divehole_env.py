@@ -188,6 +188,15 @@ class WolfPackAlphaNeo(gym.Env):
                 self.done = True
             else:
                 self.done = False
+        elif self.args.finish_pattern == "hard":
+            if self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]+1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1] and self.statusAry[self.args.agent_number][0]-1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
+                self.done = Ture
+            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]+1 and self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]-1:
+                self.done = Ture
+            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]-1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1] and self.statusAry[self.args.agent_number][0]+1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
+                self.done = Ture
+            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]-1 and self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]+1:
+                self.done = Ture
 
     def premadeMove(self):
         # ターゲットのx,y取得
