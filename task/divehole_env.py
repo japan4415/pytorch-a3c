@@ -246,18 +246,19 @@ class WolfPackAlphaNeo(gym.Env):
                         move = 2
                     else:
                         move = 4
-        if targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[0]:
+        if targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[0][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[0][1]:
             color = 0
-        elif targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[1]:
+        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[1][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[1][1]:
             color = 1
-        elif targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[2]:
+        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[2][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[2][1]:
             color = 2
-        elif targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[3]:
+        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
             color = 3
         print(targetPositionAryTrue[np.argmin(distanceAry)])
         print(targetPositionAry)
         print(move)
         print(color)
+        print("a")
         return color * 5 + move
 
     def rrender(self, state,name,stepN,mode):
