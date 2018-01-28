@@ -38,7 +38,7 @@ def test(rank, args, shared_model_ary, counter):
     #env.seed(args.seed + rank)
 
     #env = envTest.create_divehole(args,args.agent_number,args.field_size,args.max_episode_length)
-    env = divehole_env.WolfPackAlphaNeo(args)
+    env = divehole_env.WolfPackAlpha(args)
 
     model_ary = []
     for i in range(len(shared_model_ary)):
@@ -109,42 +109,42 @@ def test(rank, args, shared_model_ary, counter):
             while done == False:
                 episode_length += 1
                 action_ary = []
-                state,premadeAction = env.step0()
+
                 # 行動選択
                 state = torch.from_numpy(state)
                 # print(state)
-                i=1
-                value, logit, (hx_ary[i], cx_ary[i]) = model_ary[i]((Variable(state.unsqueeze(0), volatile=True), (hx_ary[i], cx_ary[i])))
-                prob = F.softmax(logit,dim=1)
-                action_ary.append(prob.max(1, keepdim=True)[1].data.numpy())
+                for i in range(len(shared_model_ary)):
+                    value, logit, (hx_ary[i], cx_ary[i]) = model_ary[i]((Variable(state.unsqueeze(0), volatile=True), (hx_ary[i], cx_ary[i])))
+                    prob = F.softmax(logit,dim=1)
+                    action_ary.append(prob.max(1, keepdim=True)[1].data.numpy())
                 # if args.with_premade:
                 #     action_ary[1] = pA.getAction(args,env.statusA)
 
                 state, reward_ary, done, act_action_ary= env.step(action_ary)
                 done = done or episode_length >= args.max_episode_length
 
-                i=1
-                # スタックしていた場合，終了
-                actions[i].append(action_ary[i])
-                if actions[i].count(actions[i][0]) == actions[i].maxlen:
-                    done = True
-                    episode_length = args.max_episode_length
-                # logファイルにstate書き込み
-                # print('log書くよ')
-                os.makedirs('log/'+args.env_name+'/state/'+str(currentCounter),exist_ok=True)
-                f=open('log/'+args.env_name+'/state/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
-                text = str(env.turn-1) + ' '
-                for j in range(len(shared_model_ary)+1):
-                    text = text + str(env.statusAry[j][0]) + ' ' + str(env.statusAry[j][1]) +  ' ' + str(env.statusAry[j][2]) +  ' '
-                text = text + '\n'
-                f.writelines(text)
-                f.close()
-                # logファイルにmove書き込み
-                os.makedirs('log/'+args.env_name+'/move/'+str(currentCounter),exist_ok=True)
-                f=open('log/'+args.env_name+'/move/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
-                text = str(env.turn-1) + ' ' + str(act_action_ary[0]) + ' ' + str(act_action_ary[1]) +  ' ' + str(act_action_ary[2]) +'\n'
-                f.writelines(text)
-                f.close()
+                for i in range(len(shared_model_ary)):
+                    # スタックしていた場合，終了
+                    actions[i].append(action_ary[i])
+                    if actions[i].count(actions[i][0]) == actions[i].maxlen:
+                        done = True
+                        episode_length = args.max_episode_length
+                    # logファイルにstate書き込み
+                    # print('log書くよ')
+                    os.makedirs('log/'+args.env_name+'/state/'+str(currentCounter),exist_ok=True)
+                    f=open('log/'+args.env_name+'/state/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
+                    text = str(env.turn-1) + ' '
+                    for j in range(len(shared_model_ary)+1):
+                        text = text + str(env.statusAry[j][0]) + ' ' + str(env.statusAry[j][1]) +  ' ' + str(env.statusAry[j][2]) +  ' '
+                    text = text + '\n'
+                    f.writelines(text)
+                    f.close()
+                    # logファイルにmove書き込み
+                    os.makedirs('log/'+args.env_name+'/move/'+str(currentCounter),exist_ok=True)
+                    f=open('log/'+args.env_name+'/move/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
+                    text = str(env.turn-1) + ' ' + str(act_action_ary[0]) + ' ' + str(act_action_ary[1]) +  ' ' + str(act_action_ary[2]) +'\n'
+                    f.writelines(text)
+                    f.close()
 
                 # if kai==0:
                     # env.rrender(state,kai,episode_length,0)
