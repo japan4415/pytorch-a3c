@@ -51,7 +51,7 @@ parser.add_argument('--test-span', type=int, default=60, help='test span')
 parser.add_argument('--delete-mode', type=bool, default=False, help='delete agent?')
 parser.add_argument('--with-premade', type=bool, default=False, help="with premade agent?")
 parser.add_argument('--reward-amount1', type=bool, default=False, help="reward dousuru?")
-parser.add_argument('--finish-pattern', type=str, default="soft", help="finish no pattern")
+parser.add_argument('--finish-pattern', type=str, default="hard", help="finish no pattern")
 parser.add_argument('--random-move', type=bool, default=True, help="Target ga randome move")
 
 if __name__ == '__main__':
