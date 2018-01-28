@@ -255,6 +255,14 @@ class WolfPackAlphaNeo(gym.Env):
             color = 3
         return color * 5 + move
 
+    def rrender(self, state,name,stepN,mode):
+        if not os.path.isdir('log/no' + str(name)):
+            os.makedirs('log/no' + str(name))
+        if mode == 0:
+            img = Image.fromarray(np.uint8(state))
+            img = img.resize((int(img.width * 5),int(img.height * 5)),Image.BOX)
+            img.save('log/no' + str(name) + "/" + str(stepN) + '.png')
+
 
 class WolfPackAlpha(gym.Env):
 

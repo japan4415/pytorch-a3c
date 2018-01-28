@@ -146,8 +146,8 @@ def test(rank, args, shared_model_ary, counter):
                 f.writelines(text)
                 f.close()
 
-                # if kai==0:
-                    # env.rrender(state,kai,episode_length,0)
+                if kai % test_kaisu==0:
+                    env.rrender(state,episode_amount,episode_length,0)
 
                 if episode_length != args.max_episode_length and reward_ary[0] > 0:
                     pass
