@@ -149,7 +149,7 @@ def test(rank, args, shared_model_ary, counter):
                 if kai % test_kaisu==0:
                     env.rrender(state,episode_amount,episode_length,0)
 
-                if episode_length != args.max_episode_length and reward > 0:
+                if episode_length != args.max_episode_length and reward_ary > 0:
                     pass
                     #print("maybe gall, kai: {}, length: {}, reward: {}".format(kai,episode_length,reward_ary[0]))
 
