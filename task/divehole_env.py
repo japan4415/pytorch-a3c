@@ -190,13 +190,16 @@ class WolfPackAlphaNeo(gym.Env):
                 self.done = False
 
     def premadeMove(self):
+        # ターゲットのx,y取得
         x = self.statusAry[self.args.agent_number][0]
         y = self.statusAry[self.args.agent_number][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
+        # 行ける位置か判定
         for i in range(len(targetPositionAry)):
             if self.checkPosition(targetPositionAry[i][0],targetPositionAry[i][1]):
                 targetPositionAryTrue.append(targetPositionAry[i])
+        # 距離を計算
         distanceAry = []
         for i in range(len(targetPositionAryTrue)):
             # print(self.statusAry[self.args.agent_number][0])
@@ -209,6 +212,7 @@ class WolfPackAlphaNeo(gym.Env):
             distance = math.sqrt(xDistance2+yDistance2)
             distanceAry.append(distance)
         print(self.statusAry)
+        print(targetPositionAryTrue)
         print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
@@ -254,11 +258,11 @@ class WolfPackAlphaNeo(gym.Env):
             color = 2
         elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
             color = 3
-        print(targetPositionAryTrue[np.argmin(distanceAry)])
-        print(targetPositionAry)
+        # print(targetPositionAryTrue[np.argmin(distanceAry)])
+        # print(targetPositionAry)
         print(move)
-        print(color)
-        print("a")
+        # print(color)
+        # print("a")
         return color * 5 + move
 
     def rrender(self, state,name,stepN,mode):
