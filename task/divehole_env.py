@@ -231,58 +231,61 @@ class WolfPackAlphaNeo(gym.Env):
         # print(self.statusAry)
         # print(targetPositionAryTrue)
         # print(distanceAry)
-        targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
-        targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
-        if abs(targetX - self.statusAry[0][0]) >= abs(targetY - self.statusAry[0][1]):
-            if targetX - self.statusAry[0][0] > 0:
-                if self.checkPosition(self.statusAry[0][0]+1,self.statusAry[0][1]):
-                    move = 2
-                else:
-                    if targetY - self.statusAry[0][1] > 0:
-                        move = 1
-                    else:
-                        move = 3
-            else:
-                if self.checkPosition(self.statusAry[0][0]-1,self.statusAry[0][1]):
-                    move = 4
-                else:
-                    if targetY - self.statusAry[0][1] > 0:
-                        move = 1
-                    else:
-                        move = 3
-        else:
-            if targetY - self.statusAry[0][1] > 0:
-                if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]+1):
-                    move = 1
-                else:
-                    if targetX - self.statusAry[0][0] > 0:
+        if len(distanceAry) != 0:
+            targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
+            targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
+            if abs(targetX - self.statusAry[0][0]) >= abs(targetY - self.statusAry[0][1]):
+                if targetX - self.statusAry[0][0] > 0:
+                    if self.checkPosition(self.statusAry[0][0]+1,self.statusAry[0][1]):
                         move = 2
                     else:
-                        move = 4
-            else:
-                if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]-1):
-                    move = 3
+                        if targetY - self.statusAry[0][1] > 0:
+                            move = 1
+                        else:
+                            move = 3
                 else:
-                    if targetX - self.statusAry[0][0] > 0:
-                        move = 2
-                    else:
+                    if self.checkPosition(self.statusAry[0][0]-1,self.statusAry[0][1]):
                         move = 4
-        if targetX-self.statusAry[0][0] + targetY - self.statusAry[0][1] == 0:
-            move = 0
-        if targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[0][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[0][1]:
-            color = 0
-        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[1][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[1][1]:
-            color = 1
-        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[2][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[2][1]:
-            color = 2
-        elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
-            color = 3
+                    else:
+                        if targetY - self.statusAry[0][1] > 0:
+                            move = 1
+                        else:
+                            move = 3
+            else:
+                if targetY - self.statusAry[0][1] > 0:
+                    if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]+1):
+                        move = 1
+                    else:
+                        if targetX - self.statusAry[0][0] > 0:
+                            move = 2
+                        else:
+                            move = 4
+                else:
+                    if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]-1):
+                        move = 3
+                    else:
+                        if targetX - self.statusAry[0][0] > 0:
+                            move = 2
+                        else:
+                            move = 4
+            if targetX-self.statusAry[0][0] + targetY - self.statusAry[0][1] == 0:
+                move = 0
+            if targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[0][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[0][1]:
+                color = 0
+            elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[1][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[1][1]:
+                color = 1
+            elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[2][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[2][1]:
+                color = 2
+            elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
+                color = 3
         # print(targetPositionAryTrue[np.argmin(distanceAry)])
         # # print(targetPositionAry)
         # print(move)
         # print(color)
         # print("a")
-        return color * 5 + move
+            return color * 5 + move
+        else:
+            return 0
 
     def rrender(self, state,name,stepN,mode):
         if not os.path.isdir('log/no' + str(name)):
