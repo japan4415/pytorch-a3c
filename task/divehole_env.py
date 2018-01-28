@@ -506,6 +506,7 @@ class WolfPackAlpha(gym.Env):
             color = 2
         elif targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[3]:
             color = 3
+        self.statusAry[0][2] = color
         return color * 5 + move
 
 
