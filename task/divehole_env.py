@@ -211,9 +211,9 @@ class WolfPackAlphaNeo(gym.Env):
             # print(yDistance2)
             distance = math.sqrt(xDistance2+yDistance2)
             distanceAry.append(distance)
-        print(self.statusAry)
-        print(targetPositionAryTrue)
-        print(distanceAry)
+        # print(self.statusAry)
+        # print(targetPositionAryTrue)
+        # print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
         if abs(targetX - self.statusAry[0][0]) >= abs(targetY - self.statusAry[0][1]):
@@ -260,9 +260,9 @@ class WolfPackAlphaNeo(gym.Env):
             color = 2
         elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
             color = 3
-        print(targetPositionAryTrue[np.argmin(distanceAry)])
-        # print(targetPositionAry)
-        print(move)
+        # print(targetPositionAryTrue[np.argmin(distanceAry)])
+        # # print(targetPositionAry)
+        # print(move)
         # print(color)
         # print("a")
         return color * 5 + move
