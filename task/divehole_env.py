@@ -190,14 +190,15 @@ class WolfPackAlphaNeo(gym.Env):
                 self.done = False
         elif self.args.finish_pattern == "hard":
             count = [0,0,0,0]
-            if self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]+1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
-                count[0] += 1
-            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]+1:
-                count[1] += 1
-            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]-1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
-                count[2] += 1
-            elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]-1:
-                count[3] += 1
+            for i in range(self.args.agent_number):
+                if self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]+1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
+                    count[0] += 1
+                elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]+1:
+                    count[1] += 1
+                elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0]-1 and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]:
+                    count[2] += 1
+                elif self.statusAry[i][0] == self.statusAry[self.args.agent_number][0] and self.statusAry[i][1] == self.statusAry[self.args.agent_number][1]-1:
+                    count[3] += 1
             if count[0] == 1 and count[2] == 1:
                 self.done = True
             elif count[1] == 1 and count[3] == 1:
