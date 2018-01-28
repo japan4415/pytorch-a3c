@@ -137,7 +137,7 @@ class WolfPackAlphaNeo(gym.Env):
                     move = 0
         else:
             move = 0
-        actionAry.append(move)
+        actionTarget = move
         # print(self.statusAry)
         self.makeField()
         if self.done:
@@ -150,7 +150,7 @@ class WolfPackAlphaNeo(gym.Env):
             if self.turn >= self.args.max_episode_length:
                 self.done = True
         
-        return self.fieldAry,self.reward,self.done,action
+        return self.fieldAry,self.reward,self.done,action,actionTarget
 
 
     def checkPosition(self,x,y):

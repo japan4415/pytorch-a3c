@@ -120,7 +120,7 @@ def test(rank, args, shared_model_ary, counter):
                 # if args.with_premade:
                 #     action_ary[1] = pA.getAction(args,env.statusA)
 
-                state, reward_ary, done, act_action_ary= env.step(action_ary)
+                state, reward_ary, done, action, actionTarget= env.step(action_ary)
                 done = done or episode_length >= args.max_episode_length
 
                 i=1
@@ -142,7 +142,7 @@ def test(rank, args, shared_model_ary, counter):
                 # logファイルにmove書き込み
                 os.makedirs('log/'+args.env_name+'/move/'+str(currentCounter),exist_ok=True)
                 f=open('log/'+args.env_name+'/move/'+str(currentCounter)+'/'+str(episode_amount)+'.log','a')
-                text = str(env.turn-1) + ' ' + str(act_action_ary[0]) + ' ' + str(act_action_ary[1]) +  ' ' + str(act_action_ary[2]) +'\n'
+                text = str(env.turn-1) + ' ' + str(actionPremade) + ' ' + str(action) +  ' ' + str(actionTarget) +'\n'
                 f.writelines(text)
                 f.close()
 

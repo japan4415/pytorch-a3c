@@ -106,7 +106,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
             #     action_ary[1] = pA.getAction(args,env.statusAry)
 
             # 実行してs,r,dを受け取る
-            state, reward_ary, done, act_action_ary = env.step1(action)
+            state, reward_ary, done, action, actionTarget = env.step1(action)
             # if reward_ary[0] > 0:
             #     print(reward_ary)
             done = done or episode_length >= args.max_episode_length
