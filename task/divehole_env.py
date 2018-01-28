@@ -190,8 +190,8 @@ class WolfPackAlphaNeo(gym.Env):
                 self.done = False
 
     def premadeMove(self):
-        x = self.statusAry[0][0]
-        y = self.statusAry[0][1]
+        x = self.statusAry[self.args.agent_number][0]
+        y = self.statusAry[self.args.agent_number][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
         for i in range(len(targetPositionAry)):
@@ -199,7 +199,7 @@ class WolfPackAlphaNeo(gym.Env):
                 targetPositionAryTrue.append(targetPositionAry[i])
         distanceAry = []
         for i in range(len(targetPositionAryTrue)):
-            # print(self.statusAry[0][0])
+            # print(self.statusAry[self.args.agent_number][0])
             # print(targetPositionAryTrue[i][0])
             # print(targetPositionAryTrue)
             xDistance2 = pow((self.statusAry[0][0] - targetPositionAryTrue[i][0]),2)
@@ -211,8 +211,8 @@ class WolfPackAlphaNeo(gym.Env):
         # print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
-        if abs(targetX - self.statusAry[0][0]) >= abs(targetX - self.statusAry[0][1]):
-            if targetX - self.statusAry[0][0] > 0:
+        if abs(targetX - self.statusAry[self.args.agent_number][0]) >= abs(targetX - self.statusAry[self.args.agent_number][1]):
+            if targetX - self.statusAry[self.args.agent_number][0] > 0:
                 if self.checkPosition(self.statusAry[0][0]+1,self.statusAry[0][1]):
                     move = 2
                 else:
