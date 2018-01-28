@@ -208,7 +208,8 @@ class WolfPackAlphaNeo(gym.Env):
             # print(yDistance2)
             distance = math.sqrt(xDistance2+yDistance2)
             distanceAry.append(distance)
-        # print(distanceAry)
+        print(self.statusAry)
+        print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
         if abs(targetX - self.statusAry[self.args.agent_number][0]) >= abs(targetX - self.statusAry[self.args.agent_number][1]):
