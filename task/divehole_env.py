@@ -250,6 +250,8 @@ class WolfPackAlphaNeo(gym.Env):
                         move = 2
                     else:
                         move = 4
+        if targetX-self.statusAry[0][0] + targetY - self.statusAry[0][1] == 0:
+            move = 0
         if targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[0][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[0][1]:
             color = 0
         elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[1][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[1][1]:
