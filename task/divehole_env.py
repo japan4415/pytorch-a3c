@@ -190,8 +190,8 @@ class WolfPackAlphaNeo(gym.Env):
                 self.done = False
 
     def premadeMove(self):
-        x = self.statusAry[self.args.agent_number][0]
-        y = self.statusAry[self.args.agent_number][1]
+        x = self.statusAry[0][0]
+        y = self.statusAry[0][1]
         targetPositionAry = [[x,y-1],[x+1,y],[x,y+1],[x-1,y]]
         targetPositionAryTrue = []
         for i in range(len(targetPositionAry)):
@@ -199,7 +199,7 @@ class WolfPackAlphaNeo(gym.Env):
                 targetPositionAryTrue.append(targetPositionAry[i])
         distanceAry = []
         for i in range(len(targetPositionAryTrue)):
-            # print(self.statusAry[self.args.agent_number][0])
+            # print(self.statusAry[0][0])
             # print(targetPositionAryTrue[i][0])
             # print(targetPositionAryTrue)
             xDistance2 = pow((self.statusAry[0][0] - targetPositionAryTrue[i][0]),2)
@@ -211,37 +211,37 @@ class WolfPackAlphaNeo(gym.Env):
         # print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
-        if abs(targetX - self.statusAry[self.args.agent_number][0]) >= abs(targetX - self.statusAry[self.args.agent_number][1]):
-            if targetX - self.statusAry[self.args.agent_number][0] > 0:
-                if self.checkPosition(self.statusAry[self.args.agent_number][0]+1,self.statusAry[self.args.agent_number][1]):
+        if abs(targetX - self.statusAry[0][0]) >= abs(targetX - self.statusAry[0][1]):
+            if targetX - self.statusAry[0][0] > 0:
+                if self.checkPosition(self.statusAry[0][0]+1,self.statusAry[0][1]):
                     move = 2
                 else:
-                    if targetY - self.statusAry[self.args.agent_number][1] > 0:
+                    if targetY - self.statusAry[0][1] > 0:
                         move = 1
                     else:
                         move = 3
             else:
-                if self.checkPosition(self.statusAry[self.args.agent_number][0]-1,self.statusAry[self.args.agent_number][1]):
+                if self.checkPosition(self.statusAry[0][0]-1,self.statusAry[0][1]):
                     move = 4
                 else:
-                    if targetY - self.statusAry[self.args.agent_number][1] > 0:
+                    if targetY - self.statusAry[0][1] > 0:
                         move = 1
                     else:
                         move = 3
         else:
-            if targetY - self.statusAry[self.args.agent_number][1] > 0:
-                if self.checkPosition(self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number][1]+1):
+            if targetY - self.statusAry[0][1] > 0:
+                if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]+1):
                     move = 1
                 else:
-                    if targetX - self.statusAry[self.args.agent_number][0] > 0:
+                    if targetX - self.statusAry[0][0] > 0:
                         move = 2
                     else:
                         move = 4
             else:
-                if self.checkPosition(self.statusAry[self.args.agent_number][0],self.statusAry[self.args.agent_number][1]-1):
+                if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]-1):
                     move = 3
                 else:
-                    if targetX - self.statusAry[self.args.agent_number][0] > 0:
+                    if targetX - self.statusAry[0][0] > 0:
                         move = 2
                     else:
                         move = 4
