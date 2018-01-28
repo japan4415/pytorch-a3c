@@ -84,6 +84,7 @@ class WolfPackAlphaNeo(gym.Env):
         return self.fieldAry,action
 
     def step1(self,action):
+        print(type(action))
         color = action // 5
         move = action % 5
         i=2
