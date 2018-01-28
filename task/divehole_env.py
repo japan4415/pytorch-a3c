@@ -48,7 +48,7 @@ class WolfPackAlphaNeo(gym.Env):
             # print(self.fieldAry[self.statusAry[i][0]][self.statusAry[i][1]])
             # print(self.statusAry[i][2])
             # print(self.agentColorAry[i][self.statusAry[i][2]])
-            self.fieldAry[self.statusAry[i][0]][self.statusAry[i][1]] = self.agentColorAry[i][self.statusAry[i][2]]
+            self.fieldAry[self.statusAry[i][1]][self.statusAry[i][0]] = self.agentColorAry[i][self.statusAry[i][2]]
         self.fieldAry[self.statusAry[2][1]][self.statusAry[2][0]] = self.goalColor
 
     def step0(self):
