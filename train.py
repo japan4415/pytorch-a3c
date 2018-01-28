@@ -124,10 +124,10 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
                 state = env.reset()
 
             state = torch.from_numpy(state)
-            for i in range(len(shared_model_ary)):
-                values_ary[i].append(value)
-                log_probs_ary[i].append(log_prob_ary[i])
-                rewards_ary[i].append(reward)
+            i=1
+            values_ary[i].append(value)
+            log_probs_ary[i].append(log_prob_ary[i])
+            rewards_ary[i].append(reward)
 
             if done:
                 break

@@ -120,7 +120,7 @@ def test(rank, args, shared_model_ary, counter):
                 # if args.with_premade:
                 #     action_ary[1] = pA.getAction(args,env.statusA)
 
-                state, reward_ary, done, action, actionTarget= env.step(action_ary)
+                state, reward_ary, done, action, actionTarget= env.step1(action_ary)
                 done = done or episode_length >= args.max_episode_length
 
                 i=1
