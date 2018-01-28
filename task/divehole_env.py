@@ -60,23 +60,23 @@ class WolfPackAlphaNeo(gym.Env):
         if move == 0:
             pass
         elif move == 1:
-            if self.checkPosition(self.statusAry[i][0]+1,self.statusAry[i][1]):
-                self.statusAry[i][0] += 1
-            else:
-                action = 0
-        elif move == 2:
             if self.checkPosition(self.statusAry[i][0],self.statusAry[i][1]+1):
                 self.statusAry[i][1] += 1
             else:
                 action = 0
+        elif move == 2:
+            if self.checkPosition(self.statusAry[i][0]+1,self.statusAry[i][1]):
+                self.statusAry[i][0] += 1
+            else:
+                action = 0
         elif move == 3:
-            if self.checkPosition(self.statusAry[i][0]-1,self.statusAry[i][1]):
-                self.statusAry[i][0] -= 1
+            if self.checkPosition(self.statusAry[i][0],self.statusAry[i][1]-1):
+                self.statusAry[i][1] -= 1
             else:
                 action = 0
         elif move == 4:
-            if self.checkPosition(self.statusAry[i][0],self.statusAry[i][1]-1):
-                self.statusAry[i][1] -= 1
+            if self.checkPosition(self.statusAry[i][0]-1,self.statusAry[i][1]):
+                self.statusAry[i][0] -= 1
             else:
                 action = 0
         # print(self.statusAry)
