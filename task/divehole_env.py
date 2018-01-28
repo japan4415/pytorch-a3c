@@ -56,6 +56,7 @@ class WolfPackAlphaNeo(gym.Env):
         self.turn += 1
         i = 0
         color = action // 5
+        self.statusAry[0][2] = color
         move = action % 5
         if move == 0:
             pass
