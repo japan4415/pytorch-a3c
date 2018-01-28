@@ -109,7 +109,7 @@ def test(rank, args, shared_model_ary, counter):
             while done == False:
                 episode_length += 1
                 action_ary = []
-                state,premadeAction = env.step0()
+                state,actionPremade = env.step0()
                 # 行動選択
                 state = torch.from_numpy(state)
                 # print(state)
