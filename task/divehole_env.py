@@ -258,7 +258,7 @@ class WolfPackAlphaNeo(gym.Env):
             color = 2
         elif targetPositionAryTrue[np.argmin(distanceAry)][0] == targetPositionAry[3][0] and targetPositionAryTrue[np.argmin(distanceAry)][1] == targetPositionAry[3][1]:
             color = 3
-        # print(targetPositionAryTrue[np.argmin(distanceAry)])
+        print(targetPositionAryTrue[np.argmin(distanceAry)])
         # print(targetPositionAry)
         print(move)
         # print(color)
