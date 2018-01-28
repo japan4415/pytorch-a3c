@@ -101,7 +101,7 @@ def train(rank, args, shared_model_ary, counter, lock, optimizer=None):
             log_prob_ary.append(log_prob.gather(1, Variable(prob.multinomial().data)))
 
 
-            state, actionPremade = env.step0
+            state, actionPremade = env.step0()
             # if args.with_premade:
             #     action_ary[1] = pA.getAction(args,env.statusAry)
 
