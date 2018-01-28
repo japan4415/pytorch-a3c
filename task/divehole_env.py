@@ -216,7 +216,7 @@ class WolfPackAlphaNeo(gym.Env):
         print(distanceAry)
         targetX = targetPositionAryTrue[np.argmin(distanceAry)][0]
         targetY = targetPositionAryTrue[np.argmin(distanceAry)][1]
-        if abs(targetX - self.statusAry[0][0]) >= abs(targetX - self.statusAry[self.args.agent_number][1]):
+        if abs(targetX - self.statusAry[0][0]) >= abs(targetY - self.statusAry[0][1]):
             if targetX - self.statusAry[0][0] > 0:
                 if self.checkPosition(self.statusAry[0][0]+1,self.statusAry[0][1]):
                     move = 2
