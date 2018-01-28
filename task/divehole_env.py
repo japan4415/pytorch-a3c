@@ -254,6 +254,8 @@ class WolfPackAlphaNeo(gym.Env):
             color = 2
         elif targetPositionAryTrue[np.argmin(distanceAry)] == targetPositionAry[3]:
             color = 3
+        print(move)
+        print(color)
         return color * 5 + move
 
     def rrender(self, state,name,stepN,mode):
