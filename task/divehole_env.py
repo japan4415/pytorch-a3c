@@ -341,6 +341,7 @@ class WolfPackAlpha(gym.Env):
         self.turn += 1
         for i in range(self.args.agent_number):
             color = actionAry[i] // 5
+            self.statusAry[i][2] = color
             move = actionAry[i] % 5
             if move == 0:
                 pass
@@ -469,17 +470,17 @@ class WolfPackAlpha(gym.Env):
                     move = 2
                 else:
                     if targetY - self.statusAry[0][1] > 0:
-                        move = 1
-                    else:
                         move = 3
+                    else:
+                        move = 1
             else:
                 if self.checkPosition(self.statusAry[0][0]-1,self.statusAry[0][1]):
                     move = 4
                 else:
                     if targetY - self.statusAry[0][1] > 0:
-                        move = 1
-                    else:
                         move = 3
+                    else:
+                        move = 1
         else:
             if targetY - self.statusAry[0][1] > 0:
                 if self.checkPosition(self.statusAry[0][0],self.statusAry[0][1]+1):
